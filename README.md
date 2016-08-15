@@ -43,11 +43,13 @@ Example
 
    In babel-then-package-to-zip example, serverless will run customized package process: transcompile and package to zip
    
-       exec("Clean Up Environment", "rm -rf ._target lib *.zip &amp;&amp; mkdir -p lib");
-       exec("Compiling", "node_modules/.bin/babel --presets es2015,react --plugins transform-async-to-generator,transform-runtime,transform-class-properties,transform-flow-strip-types -d lib/ src/");
-         
-       const packageBuilder = new PackageBuilder(servicePath);
-       packageBuilder.addFolder("lib");
-       packageBuilder.addDependenciesExclude(["node_modules/aws-sdk"]);
-         
-       packageBuilder.writeToFileSync(artifactFilePath);
+    ```js
+    exec("Clean Up Environment", "rm -rf ._target lib *.zip &amp;&amp; mkdir -p lib");
+    exec("Compiling", "node_modules/.bin/babel --presets es2015,react --plugins transform-async-to-generator,transform-runtime,transform-class-properties,transform-flow-strip-types -d lib/ src/");
+       
+    const packageBuilder = new PackageBuilder(servicePath);
+    packageBuilder.addFolder("lib");
+    packageBuilder.addDependenciesExclude(["node_modules/aws-sdk"]);
+       
+    packageBuilder.writeToFileSync(artifactFilePath);
+    ```
