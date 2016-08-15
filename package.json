@@ -1,0 +1,23 @@
+{
+  "name": "serverless-scriptable-plugin",
+  "version": "0.1.0",
+  "description": "Add scripts(nodejs) support to serverless 1.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wei-xu-myob/serverless-scriptable-plugin.git"
+  },
+  "keywords": [
+    "serverless",
+    "script"
+  ],
+  "author": "wei.xu@myob.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wei-xu-myob/serverless-scriptable-plugin/issues"
+  },
+  "homepage": "https://github.com/wei-xu-myob/serverless-scriptable-plugin#readme"
+}
