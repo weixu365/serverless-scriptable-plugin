@@ -49,6 +49,8 @@ Example
        
     const packageBuilder = new PackageBuilder(servicePath);
     packageBuilder.addFolder("lib");
+    
+    //I only tested npm 3, not sure if npm 2 works or not.
     packageBuilder.addDependenciesExclude(["node_modules/aws-sdk"]);
        
     packageBuilder.writeToFileSync(artifactFilePath);
