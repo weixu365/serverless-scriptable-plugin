@@ -37,7 +37,7 @@ module.exports = class PackageBuilder {
     }
 
     addDependenciesExclude(excluded) {
-        var output = execSync("npm ls --prod=true --parseable=true").toString("utf8");
+        var output = execSync("npm ls --prod=true --parseable=true --depth=0").toString("utf8");
         var dependencyFolders = output.split("\n");
         dependencyFolders.forEach((folder) => {
             const relativeFilePath = path.relative(this.baseFolder, folder);
