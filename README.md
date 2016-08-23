@@ -20,7 +20,7 @@ Quick Start
     
         custom:
           scriptHooks:
-            before:deploy:createDeploymentPackage: build/package.js
+            before:deploy:createDeploymentArtifacts: build/package.js
 
    Example File Structure
        
