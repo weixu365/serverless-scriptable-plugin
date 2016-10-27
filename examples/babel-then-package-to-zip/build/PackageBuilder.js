@@ -37,16 +37,29 @@ module.exports = class PackageBuilder {
     }
 
     addDependenciesExclude(excluded) {
-        var output = execSync("npm ls --prod=true --parseable=true --depth=0").toString("utf8");
-        var dependencyFolders = output.split("\n");
+        const dependencyFolders = execSync('npm ls --prod=true --parseable=true').toString('utf8').split('\n');
+
         dependencyFolders.forEach((folder) => {
             const relativeFilePath = path.relative(this.baseFolder, folder);
 
-            if (relativeFilePath.length > 0 && excluded.indexOf(relativeFilePath) < 0) {
-                console.log("Add dependencies: " + relativeFilePath);
+            if (relativeFilePath.length > 0 && excluded.indexOf(relativeFilePath) < 0 && this.isRootDependency(relativeFilePath) ) {
+                console.log(`Add dependencies: ${relativeFilePath}`);
                 this.addFolder(folder);
             }
         });
+    }
+
+    /**
+     * dependency path starts from node_modules, so ignore dependencies if multiple path delimiter occurs in path
+     * because it has already been added through other dependency
+     * npm V2 using nested dependencies
+     * npm V3 using flat dependencies,
+     * @param dependencyPath
+     * @returns {boolean}
+     */
+    isRootDependency(dependencyPath) {
+        const pathParts = dependencyPath.split(/[/\\]/);
+        return pathParts.length <= 2;
     }
 
     writeToFileSync(targetFile) {

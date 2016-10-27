@@ -2,6 +2,7 @@
 const vm = require('vm');
 const fs = require('fs');
 const path = require('path');
+const execSync = require('child_process').execSync;
 
 class Scriptable {
     constructor(serverless, options) {
@@ -15,12 +16,37 @@ class Scriptable {
         }
 
         Object.keys(customs.scriptHooks).forEach(function(event) {
-            var scriptFile = customs.scriptHooks[event];
-            this.hooks[event] = this.runScript(scriptFile);
+            var hookScript = customs.scriptHooks[event];
+            this.hooks[event] = this.runScript(hookScript);
         }, this);
     }
 
-    runScript(scriptFile) {
+    runScript(hookScript) {
+        if(fs.existsSync(hookScript)) {
+            return this.runJavascriptFile(hookScript);
+        } else {
+            return this.runCommand(hookScript);
+        }
+    }
+
+    runCommand(hookScript) {
+        return () => {
+            console.log(`Running script: ${hookScript}`);
+
+            try{
+                var output = execSync(hookScript).toString('utf8');
+
+                this.log(output);
+            } catch(error) {
+                this.log(error.stdout.toString());
+                this.log(error.stderr.toString());
+
+                throw error;
+            }
+        }
+    }
+
+    runJavascriptFile(scriptFile) {
         const sandbox = {
             require: require,
             console: console,
@@ -34,8 +60,14 @@ class Scriptable {
         const script = new vm.createScript(scriptCode, scriptFile);
         const context = new vm.createContext(sandbox);
 
-        return ()=> {
+        return () => {
             script.runInContext(context);
+        }
+    }
+
+    log(message) {
+        if(message && message.length > 0) {
+            console.log(message);
         }
     }
 }

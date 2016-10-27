@@ -55,3 +55,18 @@ Example
        
     packageBuilder.writeToFileSync(artifactFilePath);
     ```
+
+2. Run any command as a hook script
+
+   It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
+ 
+        plugins:
+          - serverless-scriptable-plugin
+    
+        custom:
+          scriptHooks:
+            before:deploy:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
+        
+        service: service-name
+        package:
+          artifact: .serverless/package.zip

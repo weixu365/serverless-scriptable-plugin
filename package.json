@@ -1,10 +1,10 @@
 {
   "name": "serverless-scriptable-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/wei-xu-myob/serverless-scriptable-plugin/issues"
   },
-  "homepage": "https://github.com/wei-xu-myob/serverless-scriptable-plugin#readme"
+  "homepage": "https://github.com/wei-xu-myob/serverless-scriptable-plugin#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2",
+    "testdouble": "^1.9.0",
+    "tmp": "0.0.29"
+  }
 }
