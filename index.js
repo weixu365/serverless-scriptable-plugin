@@ -32,17 +32,7 @@ class Scriptable {
     runCommand(hookScript) {
         return () => {
             console.log(`Running script: ${hookScript}`);
-
-            try{
-                var output = execSync(hookScript).toString('utf8');
-
-                this.log(output);
-            } catch(error) {
-                this.log(error.stdout.toString());
-                this.log(error.stderr.toString());
-
-                throw error;
-            }
+            execSync(hookScript, {stdio: 'inherit'});
         }
     }
 
