@@ -44,7 +44,9 @@ describe('ScriptablePluginTest', () => {
     try{
       scriptable.runScript('not-exists')();
     } catch(err) {
-      expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).string('/bin/sh: not-exists: command not found');
+      expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).string('/bin/sh');
+      expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).string('not-exists:');
+      expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).string('not found');
       expect(fs.readFileSync(scriptable.stdout.name, {encoding: 'utf-8'})).equal('');
     }
   });
