@@ -10,6 +10,10 @@ class Scriptable {
         this.options = options;
         this.hooks = {};
 
+        this.stdin = process.stdin;
+        this.stdout = process.stdout;
+        this.stderr = process.stderr;
+
         var customs = this.serverless.service.custom;
         if(!customs || !customs.scriptHooks) {
             return;
@@ -32,7 +36,7 @@ class Scriptable {
     runCommand(hookScript) {
         return () => {
             console.log(`Running script: ${hookScript}`);
-            execSync(hookScript, {stdio: 'inherit'});
+            return execSync(hookScript, {stdio: [this.stdin, this.stdout, this.stderr]});
         }
     }
 
@@ -40,6 +44,7 @@ class Scriptable {
         const sandbox = {
             require: require,
             console: console,
+            process: process,
             serverless: this.serverless,
             options: this.options,
             __filename: scriptFile,
@@ -52,12 +57,6 @@ class Scriptable {
 
         return () => {
             script.runInContext(context);
-        }
-    }
-
-    log(message) {
-        if(message && message.length > 0) {
-            console.log(message);
         }
     }
 }

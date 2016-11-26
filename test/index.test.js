@@ -1,29 +1,56 @@
 const expect = require('chai').expect;
-const mock = require('testdouble');
 const fs = require('fs');
 const tmp = require('tmp');
 const Scriptable = require('./../index');
 
 describe('ScriptablePluginTest', () => {
-
   it('should run command', () => {
-    var scriptable = new Scriptable({service: {}});
-    scriptable.log = mock.function();
+    var scriptable = new Scriptable({ service: {} });
+    scriptable.stdout = tmp.fileSync({prefix: 'stdout-'});
+    scriptable.stderr = tmp.fileSync({prefix: 'stderr-'});
 
-    scriptable.runScript('echo test')();
-    mock.verify(scriptable.log('test\n'));
+    var randomString = `current time ${new Date().getTime()}`;
+    scriptable.runScript(`echo ${randomString}`)();
+
+    expect(fs.readFileSync(scriptable.stdout.name, {encoding: 'utf-8'})).string(randomString);
+    expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).equal('');
+  });
+
+  it('should run command with color', () => {
+    var scriptable = new Scriptable({ service: {} });
+
+    scriptable.runScript(`node examples/test-with-color.js`)();
+  });
+
+  it('should run js with color', () => {
+    var scriptable = new Scriptable({ service: {} });
+
+    scriptable.runScript(`examples/test-with-color.js`)();
+  });
+
+  it('should support color in child process', () => {
+    var serverless = { service: { package: {} } };
+    var scriptable = new Scriptable(serverless);
+
+    scriptable.runScript(`examples/check-is-support-colors.js`)();
+    expect(serverless.supportColorLevel).to.greaterThan(0);
   });
 
   it('should print error message when run command', () => {
-    var scriptable = new Scriptable({service: {}});
-    scriptable.log = mock.function();
+    var scriptable = new Scriptable({ service: {} });
+    scriptable.stdout = tmp.fileSync({prefix: 'stdout-'});
+    scriptable.stderr = tmp.fileSync({prefix: 'stderr-'});
 
-    expect(scriptable.runScript('not-exists')).to.throw('Command failed: not-exists\n/bin/sh: not-exists: command not found\n');
-    mock.verify(scriptable.log('/bin/sh: not-exists: command not found\n'));
+    try{
+      scriptable.runScript('not-exists')();
+    } catch(err) {
+      expect(fs.readFileSync(scriptable.stderr.name, {encoding: 'utf-8'})).string('/bin/sh: not-exists: command not found');
+      expect(fs.readFileSync(scriptable.stdout.name, {encoding: 'utf-8'})).equal('');
+    }
   });
 
   it('should run javascript', () => {
-    var serverless = {service: {package:{}}};
+    var serverless = { service: { package: {} } };
     var scriptable = new Scriptable(serverless);
 
     var scriptFile = tmp.fileSync();
