@@ -21,23 +21,28 @@ class Scriptable {
 
         Object.keys(customs.scriptHooks).forEach(function(event) {
             var hookScript = customs.scriptHooks[event];
-            this.hooks[event] = this.runScript(hookScript);
+            this.hooks[event] = this.runScript(event);
         }, this);
     }
 
-    runScript(hookScript) {
-        if(fs.existsSync(hookScript)) {
-            return this.runJavascriptFile(hookScript);
-        } else {
-            return this.runCommand(hookScript);
+    getConfig() {
+		return this.serverless.service.custom.scriptHooks;
+	}
+
+    runScript(event) {
+        return () => {
+            var hookScript = this.getConfig()[event];
+            if(fs.existsSync(hookScript)) {
+                return this.runJavascriptFile(hookScript);
+            } else {
+                return this.runCommand(hookScript);
+            }
         }
     }
 
     runCommand(hookScript) {
-        return () => {
-            console.log(`Running script: ${hookScript}`);
-            return execSync(hookScript, {stdio: [this.stdin, this.stdout, this.stderr]});
-        }
+        console.log(`Running script: ${hookScript}`);
+        return execSync(hookScript, {stdio: [this.stdin, this.stdout, this.stderr]});
     }
 
     runJavascriptFile(scriptFile) {
@@ -54,10 +59,7 @@ class Scriptable {
         var scriptCode = fs.readFileSync(scriptFile);
         const script = new vm.createScript(scriptCode, scriptFile);
         const context = new vm.createContext(sandbox);
-
-        return () => {
-            script.runInContext(context);
-        }
+        script.runInContext(context);
     }
 }
 
