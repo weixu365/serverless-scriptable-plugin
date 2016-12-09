@@ -14,25 +14,23 @@ class Scriptable {
         this.stdout = process.stdout;
         this.stderr = process.stderr;
 
-        var customs = this.serverless.service.custom;
-        if(!customs || !customs.scriptHooks) {
+        if (!this.getConfig()) {
             return;
         }
 
-        Object.keys(customs.scriptHooks).forEach(function(event) {
-            var hookScript = customs.scriptHooks[event];
+        Object.keys(this.getConfig()).forEach(function (event) {
             this.hooks[event] = this.runScript(event);
         }, this);
     }
 
     getConfig() {
-		return this.serverless.service.custom.scriptHooks;
-	}
+        return this.serverless.service.custom && this.serverless.service.custom.scriptHooks ? this.serverless.service.custom.scriptHooks : null;
+    }
 
     runScript(event) {
         return () => {
             var hookScript = this.getConfig()[event];
-            if(fs.existsSync(hookScript)) {
+            if (fs.existsSync(hookScript)) {
                 return this.runJavascriptFile(hookScript);
             } else {
                 return this.runCommand(hookScript);
@@ -42,7 +40,7 @@ class Scriptable {
 
     runCommand(hookScript) {
         console.log(`Running script: ${hookScript}`);
-        return execSync(hookScript, {stdio: [this.stdin, this.stdout, this.stderr]});
+        return execSync(hookScript, { stdio: [this.stdin, this.stdout, this.stderr] });
     }
 
     runJavascriptFile(scriptFile) {
