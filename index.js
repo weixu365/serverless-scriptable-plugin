@@ -44,6 +44,7 @@ class Scriptable {
     }
 
     runJavascriptFile(scriptFile) {
+        console.log(`Running file: ${scriptFile}`);
         const sandbox = {
             require: require,
             console: console,
