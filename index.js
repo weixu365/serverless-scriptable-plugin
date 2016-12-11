@@ -29,7 +29,7 @@ class Scriptable {
     return () => {
       const hookScript = this.getScriptHooks()[event];
 
-      if (fs.existsSync(hookScript)) {
+      if (fs.existsSync(hookScript) && path.extname(hookScript) === '.js') {
         return this.runJavascriptFile(hookScript);
       }
 

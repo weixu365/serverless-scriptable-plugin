@@ -53,6 +53,26 @@ describe('ScriptablePluginTest', () => {
     expect(serverless.service.artifact).equal('test.zip');
   });
 
+  it('should run any executable file', () => {
+    const randomString = `current time ${new Date().getTime()}`;
+
+    const scriptFile = tmp.fileSync({ postfix: '.sh' });
+    fs.chmodSync(scriptFile.name, '755');
+    fs.writeFileSync(scriptFile.name, `echo ${randomString}`);
+
+    const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+    runScript(scriptable, 'test');
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    runScript(scriptable, 'test');
+
+    expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string(randomString);
+    expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+  });
+
   it('should support serverless variables when run javascript', () => {
     const scriptFile = tmp.fileSync({ postfix: '.js' });
     fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
