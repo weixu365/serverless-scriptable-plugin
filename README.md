@@ -1,10 +1,12 @@
+[![npm version](https://badge.fury.io/js/serverless-scriptable-plugin.svg)](https://badge.fury.io/js/serverless-scriptable-plugin)
 [![Build Status](https://travis-ci.org/wei-xu-myob/serverless-scriptable-plugin.svg?branch=master)](https://travis-ci.org/wei-xu-myob/serverless-scriptable-plugin)
+[![Test Coverage](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/coverage)
+[![Code Climate](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin)
+[![Issue Count](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin)
 
 
 What's the plugins for?
 ------------------------
-
-
 This plugin add script support to Serverless 1.0 which enables you to customize Serverless behavior without writing a plugin. 
 
 It allows you to run nodejs script in any build stage.
@@ -73,3 +75,16 @@ Example
         service: service-name
         package:
           artifact: .serverless/package.zip
+
+Change Log
+-------------
+- Version 0.5.0
+  - [Feature] Supported serverless variables in script/command
+  - [Improvement] Integrated with codeclimate for code analysis and test coverage
+- Version 0.4.0
+  - [Feature] Supported colored output in script/command
+  - [Improvement] Integrated with travis for CI
+- Version 0.3.0
+  - [Feature] Supported to execute any command for serverless event
+- Version 0.2.0
+  - [Feature] Supported to execute javascript file for serverless event

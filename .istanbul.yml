@@ -1,0 +1,10 @@
+instrumentation:
+  excludes: ['example/**', 'tmp-*']
+  include-all-sources: true
+reporting:
+  reports:
+    - lcov
+    - text
+  report-config:
+    text:
+      file: test-coverage.txt
