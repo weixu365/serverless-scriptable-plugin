@@ -75,3 +75,16 @@ Example
         service: service-name
         package:
           artifact: .serverless/package.zip
+
+Change Log
+-------------
+- Version 0.5.0
+  - [Feature] Supported serverless variables in script/command
+  - [Improvement] Integrated with codeclimate for code analysis and test coverage
+- Version 0.4.0
+  - [Feature] Supported colored output in script/command
+  - [Improvement] Integrated with travis for CI
+- Version 0.3.0
+  - [Feature] Supported to execute any command for serverless event
+- Version 0.2.0
+  - [Feature] Supported to execute javascript file for serverless event
