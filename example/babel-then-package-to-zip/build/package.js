@@ -3,7 +3,6 @@ const path = require('path');
 const exec = require(path.join(__dirname, 'exec')).execSync;
 const PackageBuilder = require(path.join(__dirname, 'PackageBuilder'));
 
-const serverless = serverless || {};
 const servicePath = serverless.config.servicePath;
 const zipFileName = `${serverless.service.service}-${(new Date()).getTime().toString()}.zip`;
 const artifactFilePath = path.join(servicePath, '.serverless', zipFileName);

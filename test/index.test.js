@@ -59,18 +59,25 @@ describe('ScriptablePluginTest', () => {
     const scriptFile = tmp.fileSync({ postfix: '.sh' });
     fs.chmodSync(scriptFile.name, '755');
     fs.writeFileSync(scriptFile.name, `echo ${randomString}`);
+    fs.closeSync(scriptFile.fd);
 
     const serverless = serviceWithScripts({ test: scriptFile.name });
     const scriptable = new Scriptable(serverless);
-    runScript(scriptable, 'test');
 
     scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
     scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
 
-    runScript(scriptable, 'test');
+    try {
+      runScript(scriptable, 'test');
 
-    expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string(randomString);
-    expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string(randomString);
+      expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+    } catch (err) {
+      const stdout = fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' });
+      const stderr = fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' });
+
+      expect(true).equals(false, `stdout: ${stdout}\n stderr: ${stderr}`);
+    }
   });
 
   it('should support serverless variables when run javascript', () => {

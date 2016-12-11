@@ -1,5 +1,5 @@
 instrumentation:
-  excludes: ['example/**']
+  excludes: ['example/**', 'tmp-*']
   include-all-sources: true
 reporting:
   reports:
