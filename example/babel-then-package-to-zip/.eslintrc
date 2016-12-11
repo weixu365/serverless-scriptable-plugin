@@ -1,0 +1,6 @@
+---
+rules:
+  no-use-before-define: off
+  import/no-dynamic-require: off
+  class-methods-use-this: off
+  import/no-extraneous-dependencies: [error, { devDependencies: true }]

@@ -4,7 +4,7 @@
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha --recursive"
+    "test": "eslint -f stylish . && istanbul cover --root . _mocha -- --recursive && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,17 @@
   "homepage": "https://github.com/wei-xu-myob/serverless-scriptable-plugin#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "codeclimate-test-reporter": "^0.4.0",
     "colors": "^1.1.2",
+    "eslint": "^3.12.0",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.8.0",
+    "fs-extra": "^1.0.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
+    "node-zip": "^1.1.1",
     "supports-color": "^3.1.2",
     "testdouble": "^1.9.0",
     "tmp": "0.0.29"

@@ -1,0 +1,14 @@
+---
+root: true
+
+extends: airbnb
+
+rules:
+  no-console: off
+  strict: off
+  max-len: [error, {code: 120, tabWidth: 2, ignoreUrls: true}]
+  indent: [error, 2, {"FunctionDeclaration": {"parameters": "first"}}]
+
+env:
+  es6: true
+  node: true

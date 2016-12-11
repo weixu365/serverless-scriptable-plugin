@@ -1,0 +1,7 @@
+---
+rules:
+  no-use-before-define: off
+  no-template-curly-in-string: off
+
+env:
+  mocha: true
