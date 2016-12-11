@@ -14,33 +14,37 @@ class Scriptable {
         this.stdout = process.stdout;
         this.stderr = process.stderr;
 
-        var customs = this.serverless.service.custom;
-        if(!customs || !customs.scriptHooks) {
+        if (!this.getConfig()) {
             return;
         }
 
-        Object.keys(customs.scriptHooks).forEach(function(event) {
-            var hookScript = customs.scriptHooks[event];
-            this.hooks[event] = this.runScript(hookScript);
+        Object.keys(this.getConfig()).forEach(function (event) {
+            this.hooks[event] = this.runScript(event);
         }, this);
     }
 
-    runScript(hookScript) {
-        if(fs.existsSync(hookScript)) {
-            return this.runJavascriptFile(hookScript);
-        } else {
-            return this.runCommand(hookScript);
+    getConfig() {
+        return this.serverless.service.custom && this.serverless.service.custom.scriptHooks ? this.serverless.service.custom.scriptHooks : null;
+    }
+
+    runScript(event) {
+        return () => {
+            var hookScript = this.getConfig()[event];
+            if (fs.existsSync(hookScript)) {
+                return this.runJavascriptFile(hookScript);
+            } else {
+                return this.runCommand(hookScript);
+            }
         }
     }
 
     runCommand(hookScript) {
-        return () => {
-            console.log(`Running script: ${hookScript}`);
-            return execSync(hookScript, {stdio: [this.stdin, this.stdout, this.stderr]});
-        }
+        console.log(`Running script: ${hookScript}`);
+        return execSync(hookScript, { stdio: [this.stdin, this.stdout, this.stderr] });
     }
 
     runJavascriptFile(scriptFile) {
+        console.log(`Running file: ${scriptFile}`);
         const sandbox = {
             require: require,
             console: console,
@@ -54,10 +58,7 @@ class Scriptable {
         var scriptCode = fs.readFileSync(scriptFile);
         const script = new vm.createScript(scriptCode, scriptFile);
         const context = new vm.createContext(sandbox);
-
-        return () => {
-            script.runInContext(context);
-        }
+        script.runInContext(context);
     }
 }
 
