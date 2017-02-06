@@ -1,8 +1,8 @@
 [![npm version](https://badge.fury.io/js/serverless-scriptable-plugin.svg)](https://badge.fury.io/js/serverless-scriptable-plugin)
-[![Build Status](https://travis-ci.org/wei-xu-myob/serverless-scriptable-plugin.svg?branch=master)](https://travis-ci.org/wei-xu-myob/serverless-scriptable-plugin)
-[![Test Coverage](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/coverage)
-[![Code Climate](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin)
-[![Issue Count](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/wei-xu-myob/serverless-scriptable-plugin)
+[![Build Status](https://travis-ci.org/weixu365/serverless-scriptable-plugin.svg?branch=master)](https://travis-ci.org/weixu365/serverless-scriptable-plugin)
+[![Test Coverage](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/coverage)
+[![Code Climate](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
+[![Issue Count](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
 
 
 What's the plugins for?

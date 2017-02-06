@@ -1,6 +1,6 @@
 {
   "name": "serverless-scriptable-plugin",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wei-xu-myob/serverless-scriptable-plugin.git"
+    "url": "git+https://github.com/weixu365/serverless-scriptable-plugin.git"
   },
   "keywords": [
     "serverless",
@@ -18,9 +18,9 @@
   "author": "wei.xu@myob.com",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wei-xu-myob/serverless-scriptable-plugin/issues"
+    "url": "https://github.com/weixu365/serverless-scriptable-plugin/issues"
   },
-  "homepage": "https://github.com/wei-xu-myob/serverless-scriptable-plugin#readme",
+  "homepage": "https://github.com/weixu365/serverless-scriptable-plugin#readme",
   "devDependencies": {
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.4.0",
