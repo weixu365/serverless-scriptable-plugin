@@ -70,7 +70,7 @@ Example
     
         custom:
           scriptHooks:
-            before:deploy:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
+            after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
         
         service: service-name
         package:
