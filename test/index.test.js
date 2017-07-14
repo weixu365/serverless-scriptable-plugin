@@ -17,6 +17,26 @@ describe('ScriptablePluginTest', () => {
     expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
   });
 
+  it('should able to run multiple commands', () => {
+    const randomString = `current time ${new Date().getTime()}`;
+    const randomString2 = `current time 2 ${new Date().getTime()}`;
+    const scriptable = new Scriptable(serviceWithScripts({
+      test: [
+        `echo ${randomString}`,
+        `echo ${randomString2}`,
+      ],
+    }));
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    runScript(scriptable, 'test');
+
+    const consoleOutput = fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' });
+    expect(consoleOutput).string(`${randomString}\n${randomString2}`);
+    expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+  });
+
   it('should support color in child process', () => {
     const serverless = serviceWithScripts({ test: 'test/scripts/check-is-support-colors.js' });
     const scriptable = new Scriptable(serverless);
@@ -51,6 +71,21 @@ describe('ScriptablePluginTest', () => {
     runScript(scriptable, 'test');
 
     expect(serverless.service.artifact).equal('test.zip');
+  });
+
+  it('should run multiple javascript files', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const scriptFile2 = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile2.name, 'serverless.service.provider = "AWS";');
+
+    const serverless = serviceWithScripts({ test: [scriptFile.name, scriptFile2.name] });
+    const scriptable = new Scriptable(serverless);
+    runScript(scriptable, 'test');
+
+    expect(serverless.service.artifact).equal('test.zip');
+    expect(serverless.service.provider).equal('AWS');
   });
 
   it('should run any executable file', () => {

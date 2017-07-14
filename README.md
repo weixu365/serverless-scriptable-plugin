@@ -65,19 +65,75 @@ Example
 
    It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
  
-        plugins:
-          - serverless-scriptable-plugin
+    ```yml
+    plugins:
+      - serverless-scriptable-plugin
     
-        custom:
-          scriptHooks:
-            after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
-        
-        service: service-name
-        package:
-          artifact: .serverless/package.zip
+    custom:
+      scriptHooks:
+        after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
+    
+    service: service-name
+    package:
+      artifact: .serverless/package.zip
+    ```
+   
+3. Create CloudWatch Log subscription filter for all Lambda function Log groups, e.g. subscribe to a Kinesis stream
+  
+    ```yml
+    plugins:
+      - serverless-scriptable-plugin
+    
+    custom:
+      scriptHooks:
+        after:deploy:compileEvents: build/serverless/add-log-subscriptions.js
+    
+    provider:
+      logSubscriptionDestinationArn: 'arn:aws:logs:ap-southeast-2:{account-id}:destination:'
+    ```
+
+    and in build/serverless/add-log-subscriptions.js file:
+
+    ```js
+    const resources = serverless.service.provider.compiledCloudFormationTemplate.Resources;
+    const logSubscriptionDestinationArn = serverless.service.provider.logSubscriptionDestinationArn;
+    
+    Object.keys(resources)
+      .filter(name => resources[name].Type === 'AWS::Logs::LogGroup')
+      .forEach(logGroupName => resources[`${logGroupName}Subscription`] = {
+          Type: "AWS::Logs::SubscriptionFilter",
+          Properties: {
+            DestinationArn: logSubscriptionDestinationArn,
+            FilterPattern: ".",
+            LogGroupName: { "Ref": logGroupName }
+          }
+        }
+      );
+    ```
+
+4. Run multiple commands for the serverless event
+
+   It's possible to run multiple commands for the same serverless event, e.g. Add CloudWatch log subscription and dynamodb auto scaling support
+
+    ```yml
+    plugins:
+      - serverless-scriptable-plugin
+    
+    custom:
+      scriptHooks:
+        after:package:createDeploymentArtifacts: 
+          - build/serverless/add-log-subscriptions.js
+          - build/serverless/add-dynamodb-auto-scaling.js
+    
+    service: service-name
+    package:
+      artifact: .serverless/package.zip
+    ```
 
 Change Log
 -------------
+- Version 0.6.0
+  - [Feature] Supported execute multiple script/command for the same serverless event
 - Version 0.5.0
   - [Feature] Supported serverless variables in script/command
   - [Improvement] Integrated with codeclimate for code analysis and test coverage

@@ -29,11 +29,15 @@ class Scriptable {
     return () => {
       const hookScript = this.getScriptHooks()[event];
 
-      if (fs.existsSync(hookScript) && path.extname(hookScript) === '.js') {
-        return this.runJavascriptFile(hookScript);
-      }
+      const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
 
-      return this.runCommand(hookScript);
+      scripts.forEach((script) => {
+        if (fs.existsSync(script) && path.extname(script) === '.js') {
+          return this.runJavascriptFile(script);
+        }
+
+        return this.runCommand(script);
+      });
     };
   }
 
