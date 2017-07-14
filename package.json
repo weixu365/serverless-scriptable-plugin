@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint -f stylish . && istanbul cover --root . _mocha && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "travis-ci-test": "eslint -f stylish . && istanbul cover --root . _mocha --color=true && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "codeclimate": "codeclimate-test-reporter < coverage/lcov.info"
   },
   "repository": {
