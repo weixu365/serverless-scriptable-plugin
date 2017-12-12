@@ -3,6 +3,7 @@
 const vm = require('vm');
 const fs = require('fs');
 const path = require('path');
+const Bluebird = require('bluebird');
 const execSync = require('child_process').execSync;
 
 class Scriptable {
@@ -31,7 +32,7 @@ class Scriptable {
 
       const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
 
-      scripts.forEach((script) => {
+      return Bluebird.each(scripts, (script) => {
         if (fs.existsSync(script) && path.extname(script) === '.js') {
           return this.runJavascriptFile(script);
         }
@@ -62,7 +63,7 @@ class Scriptable {
     const script = vm.createScript(scriptCode, scriptFile);
     const context = vm.createContext(sandbox);
 
-    script.runInContext(context);
+    return script.runInContext(context);
   }
 }
 
