@@ -132,6 +132,8 @@ Example
 
 Change Log
 -------------
+- Version 0.7.0
+  - [Feature] Return promise object to let serverless to wait until script is finished
 - Version 0.6.0
   - [Feature] Supported execute multiple script/command for the same serverless event
 - Version 0.5.0
