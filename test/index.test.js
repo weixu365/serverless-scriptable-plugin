@@ -1,4 +1,4 @@
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const fs = require('fs');
 const tmp = require('tmp');
 const Bluebird = require('bluebird');
@@ -77,8 +77,8 @@ describe('ScriptablePluginTest', () => {
 
   it('should wait for async method to be finished', () => {
     const scriptFile = tmp.fileSync({ postfix: '.js' });
-    fs.writeFileSync(scriptFile.name,
-      'require("bluebird").delay(100).then(() => serverless.service.artifact = "test.zip")');
+    const script = 'require("bluebird").delay(100).then(() => serverless.service.artifact = "test.zip")';
+    fs.writeFileSync(scriptFile.name, script);
 
     const serverless = serviceWithScripts({ test: scriptFile.name });
     const scriptable = new Scriptable(serverless);

@@ -1,7 +1,7 @@
 const Zip = require('node-zip');
 const fs = require('fs');
 const path = require('path');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const fse = require('fs-extra');
 
 module.exports = class PackageBuilder {

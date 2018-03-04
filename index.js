@@ -4,7 +4,7 @@ const vm = require('vm');
 const fs = require('fs');
 const path = require('path');
 const Bluebird = require('bluebird');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 
 class Scriptable {
   constructor(serverless, options) {
@@ -22,7 +22,7 @@ class Scriptable {
   }
 
   getScriptHooks() {
-    const custom = this.serverless.service.custom;
+    const { custom } = this.serverless.service;
     return custom && custom.scriptHooks ? custom.scriptHooks : {};
   }
 
