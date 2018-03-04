@@ -1,4 +1,4 @@
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 
 module.exports = {
   execSync(description, command) {
