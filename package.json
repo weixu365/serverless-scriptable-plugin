@@ -23,21 +23,21 @@
   },
   "homepage": "https://github.com/weixu365/serverless-scriptable-plugin#readme",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "codeclimate-test-reporter": "^0.4.1",
+    "chai": "^4.1.2",
+    "codeclimate-test-reporter": "^0.5.0",
     "colors": "^1.1.2",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^13.0.0",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.10.3",
-    "fs-extra": "^1.0.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "fs-extra": "^5.0.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2",
+    "mocha": "^5.0.1",
     "node-zip": "^1.1.1",
-    "supports-color": "^3.2.3",
-    "testdouble": "^1.11.2",
-    "tmp": "0.0.29"
+    "supports-color": "^5.3.0",
+    "testdouble": "^3.5.2",
+    "tmp": "0.0.33"
   },
   "dependencies": {
     "bluebird": "^3.5.1"
