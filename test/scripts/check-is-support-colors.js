@@ -1,4 +1,6 @@
-const supportsColor = require('color-support')();
+const colorSupport = require('color-support');
+
+const supportsColor = colorSupport({ ignoreTTY: true });
 
 console.log(`check if support colors in current process? ${JSON.stringify(supportsColor)}`);
 serverless.supportColorLevel = supportsColor.level;
