@@ -1,7 +1,7 @@
 ---
 root: true
 
-extends: airbnb
+extends: airbnb-base
 
 rules:
   no-console: off

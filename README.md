@@ -25,45 +25,34 @@ Quick Start
     
         custom:
           scriptHooks:
-            before:deploy:createDeploymentArtifacts: build/package.js
-
-   Example File Structure
-       
-          Project Root 
-              |___serverless.yml
-              |___serverless.env.yml
-              |___build
-                  |___package.js
-                  
+            before:deploy:createDeploymentArtifacts: npm run build
 
 Example
 ---------
-1. Customized package behavior
+1. Customize package behavior
 
-   Currently, Serverless 1.0 package everything under service folder without any extra process. 
-   There are serveral problems:
-   
-   - Not easy for transcompiling, e.g. using Babel/Typescript to transcompile code 
-   - The default package is big because it packaged dev dependencies
+    The following config is using babel for transcompilation and packaging only the required folders: dist and node_modules without aws-sdk
 
-   In babel-then-package-to-zip example, serverless will run customized package process: transcompile and package to zip
-   
-    ```js
-    exec("Clean Up Environment", "rm -rf ._target lib *.zip &amp;&amp; mkdir -p lib");
-    exec("Compiling", "node_modules/.bin/babel --presets es2015,react --plugins transform-async-to-generator,transform-runtime,transform-class-properties,transform-flow-strip-types -d lib/ src/");
-       
-    const packageBuilder = new PackageBuilder(servicePath);
-    packageBuilder.addFolder("lib");
-    
-    //I only tested npm 3, not sure if npm 2 works or not.
-    packageBuilder.addDependenciesExclude(["node_modules/aws-sdk"]);
-       
-    packageBuilder.writeToFileSync(artifactFilePath);
+    ```yml
+    plugins:
+      - serverless-scriptable-plugin
+
+    custom:
+      scriptHooks:
+        before:deploy:createDeploymentArtifacts: npm run build
+
+    package:
+      exclude:
+        - '**/**'
+        - '!dist/**'
+        - '!node_modules/**'
+        - node_modules/aws-sdk/**
     ```
+
 
 2. Run any command as a hook script
 
-   It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
+    It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
  
     ```yml
     plugins:
