@@ -1,6 +1,6 @@
 {
   "name": "serverless-scriptable-plugin",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
@@ -24,16 +24,13 @@
   "homepage": "https://github.com/weixu365/serverless-scriptable-plugin#readme",
   "devDependencies": {
     "chai": "^4.1.2",
-    "codeclimate-test-reporter": "^0.5.0",
     "color-support": "^1.1.3",
-    "colors": "^1.2.3",
+    "colors": "^1.2.4",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.7.0",
-    "fs-extra": "^5.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.1.1",
-    "testdouble": "^3.8.0",
     "tmp": "0.0.33"
   },
   "dependencies": {

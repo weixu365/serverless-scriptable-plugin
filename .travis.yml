@@ -4,4 +4,5 @@ node_js:
 script: npm run travis-ci-test
 
 after_success:
-  - codeclimate-test-reporter < coverage/lcov.info
+  - npm install codeclimate-test-reporter --save-dev
+  - npx codeclimate-test-reporter < coverage/lcov.info
