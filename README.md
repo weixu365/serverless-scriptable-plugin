@@ -49,7 +49,6 @@ Example
         - node_modules/aws-sdk/**
     ```
 
-
 2. Run any command as a hook script
 
     It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
@@ -121,6 +120,8 @@ Example
 
 Change Log
 -------------
+- Version 0.7.1
+  - [Feature] Fix vulnerability warning by remove unnecessary dev dependencies
 - Version 0.7.0
   - [Feature] Return promise object to let serverless to wait until script is finished
 - Version 0.6.0
