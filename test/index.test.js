@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const fs = require('fs');
+const path = require('path');
 const tmp = require('tmp');
 const Bluebird = require('bluebird');
 const Scriptable = require('../index');
@@ -73,6 +74,26 @@ describe('ScriptablePluginTest', () => {
 
     return runScript(scriptable, 'test')
       .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
+  it('should able to import modules in javascript', () => {
+    const scriptModuleFile = tmp.fileSync({ postfix: '.js' });
+    const moduleName = path.basename(scriptModuleFile.name);
+    fs.writeFileSync(scriptModuleFile.name, 'module.exports = { test: () => "hello" }');
+
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, `
+      const m = require('./${moduleName}');
+      const path = require('path');
+      const modulePath = require.resolve('./${moduleName}');
+      serverless.service.artifact = m.test() + path.basename(modulePath);
+    `);
+
+    const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal(`hello${moduleName}`));
   });
 
   it('should wait for async method to be finished', () => {
