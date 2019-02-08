@@ -37,6 +37,6 @@
     "semantic-release": "15.13.3"
   },
   "dependencies": {
-    "bluebird": "^3.5.1"
+    "bluebird": "3.5.1"
   }
 }
