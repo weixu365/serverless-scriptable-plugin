@@ -1,7 +1,16 @@
 language: node_js
 node_js:
   - "6"
-script: npm run travis-ci-test
 
-after_success:
-  - npm run report-coverage
+jobs:  
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: npm run travis-ci-test && npm run report-coverage
+    - stage: Publish
+      name: "Publish to npm"
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npm run semantic-release
