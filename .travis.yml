@@ -6,7 +6,11 @@ jobs:
   include:
     - stage: "Tests"
       name: "Unit Tests"
-      script: npm run travis-ci-test && npm run report-coverage
+      script: 
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter && ./cc-test-reporter before-build
+        - npm test  
+        - ./cc-test-reporter after-build -t lcov
     - stage: Publish
       name: "Publish to npm"
       if: branch = master
