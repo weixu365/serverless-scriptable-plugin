@@ -6,7 +6,7 @@ jobs:
   include:
     - stage: "Tests"
       name: "Unit Tests"
-      script: npm run travis-ci-test && npm run report-coverage
+      script: npm test && npm run report-coverage
     - stage: Publish
       name: "Publish to npm"
       if: branch = master
