@@ -9,6 +9,7 @@ jobs:
       script: npm run travis-ci-test && npm run report-coverage
     - stage: Publish
       name: "Publish to npm"
+      if: branch = master
       deploy:
         provider: script
         skip_cleanup: true
