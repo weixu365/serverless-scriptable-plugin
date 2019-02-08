@@ -1,17 +1,18 @@
 {
   "name": "serverless-scriptable-plugin",
-  "version": "0.8.0",
+  "version": "0.0.0-development",
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
     "test": "eslint -f stylish . && istanbul cover --root . _mocha && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "travis-ci-test": "eslint -f stylish . && istanbul cover --root . _mocha --color=true && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "prereport-coverage": "npm install --no-save codeclimate-test-reporter",
-    "report-coverage": "codeclimate-test-reporter < coverage/lcov.info"
+    "report-coverage": "codeclimate-test-reporter < coverage/lcov.info",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/weixu365/serverless-scriptable-plugin.git"
+    "url": "https://github.com/weixu365/serverless-scriptable-plugin.git"
   },
   "keywords": [
     "serverless",
@@ -32,7 +33,8 @@
     "eslint-plugin-import": "^2.7.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.1.1",
-    "tmp": "0.0.33"
+    "tmp": "0.0.33",
+    "semantic-release": "^15.13.3"
   },
   "dependencies": {
     "bluebird": "^3.5.1"
