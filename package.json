@@ -4,8 +4,8 @@
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
-    "test": "eslint -f stylish . && istanbul cover --root . _mocha && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "travis-ci-test": "eslint -f stylish . && istanbul cover --root . _mocha --color=true && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "test": "eslint -f stylish . && nyc mocha && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "travis-ci-test": "eslint -f stylish . && nyc mocha && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "prereport-coverage": "npm install --no-save codeclimate-test-reporter",
     "report-coverage": "codeclimate-test-reporter < coverage/lcov.info",
     "semantic-release": "semantic-release"
@@ -31,7 +31,7 @@
     "eslint": "5.13.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.16.0",
-    "istanbul": "0.4.5",
+    "nyc": "13.2.0",
     "mocha": "5.1.1",
     "tmp": "0.0.33",
     "semantic-release": "15.13.3"
