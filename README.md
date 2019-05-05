@@ -25,7 +25,7 @@ Quick Start
     
         custom:
           scriptHooks:
-            before:deploy:createDeploymentArtifacts: npm run build
+            before:package:createDeploymentArtifacts: npm run build
 
 Example
 ---------
@@ -39,7 +39,7 @@ Example
 
     custom:
       scriptHooks:
-        before:deploy:createDeploymentArtifacts: npm run build
+        before:package:createDeploymentArtifacts: npm run build
 
     package:
       exclude:
