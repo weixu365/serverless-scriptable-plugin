@@ -74,7 +74,7 @@ Example
     
     custom:
       scriptHooks:
-        after:deploy:compileEvents: build/serverless/add-log-subscriptions.js
+        after:package:compileEvents: build/serverless/add-log-subscriptions.js
     
     provider:
       logSubscriptionDestinationArn: 'arn:aws:logs:ap-southeast-2:{account-id}:destination:'
@@ -120,6 +120,9 @@ Example
 
 Change Log
 -------------
+- Version 0.8.0 and above
+  - Check details at https://github.com/weixu365/serverless-scriptable-plugin/releases
+
 - Version 0.7.1
   - [Feature] Fix vulnerability warning by remove unnecessary dev dependencies
 - Version 0.7.0
