@@ -13,9 +13,17 @@
   },
   "keywords": [
     "serverless",
-    "script"
+    "script",
+    "shell",
+    "command",
+    "cli",
+    "javascript",
+    "nodejs",
+    "hook",
+    "customize",
+    "plugin"
   ],
-  "author": "wei.xu@myob.com",
+  "author": "weixu365@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/weixu365/serverless-scriptable-plugin/issues"
