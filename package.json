@@ -23,7 +23,6 @@
     "customize",
     "plugin"
   ],
-  "author": "weixu365@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/weixu365/serverless-scriptable-plugin/issues"
