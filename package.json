@@ -34,13 +34,13 @@
     "colors": "1.3.3",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "2.17.2",
-    "nyc": "14.1.0",
+    "eslint-plugin-import": "2.17.3",
+    "nyc": "14.1.1",
     "mocha": "6.1.4",
     "tmp": "0.1.0",
-    "semantic-release": "15.13.3"
+    "semantic-release": "15.13.12"
   },
   "dependencies": {
-    "bluebird": "3.5.4"
+    "bluebird": "3.5.5"
   }
 }
