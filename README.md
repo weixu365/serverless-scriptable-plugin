@@ -117,6 +117,10 @@ Example
     package:
       artifact: .serverless/package.zip
     ```
+Hooks
+-----------
+The serverless lifecycle hooks are different to providers, here's a reference of AWS hooks:
+https://gist.github.com/HyperBrain/50d38027a8f57778d5b0f135d80ea406#file-lifecycle-cheat-sheet-md
 
 Change Log
 -------------
