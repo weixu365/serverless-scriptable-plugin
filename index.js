@@ -17,7 +17,7 @@ class Scriptable {
     this.stdout = process.stdout;
     this.stderr = process.stderr;
 
-    Object.keys(this.getScriptHooks()).forEach((event) => {
+    Object.keys(this.getScriptHooks()).forEach(event => {
       this.hooks[event] = this.runScript(event);
     }, this);
   }
@@ -33,7 +33,7 @@ class Scriptable {
 
       const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
 
-      return Bluebird.each(scripts, (script) => {
+      return Bluebird.each(scripts, script => {
         if (fs.existsSync(script) && path.extname(script) === '.js') {
           return this.runJavascriptFile(script);
         }
@@ -61,7 +61,7 @@ class Scriptable {
 
     const sandbox = {
       module: buildModule(),
-      require: (id) => sandbox.module.require(id),
+      require: id => sandbox.module.require(id),
       console,
       process,
       serverless: this.serverless,
@@ -71,7 +71,7 @@ class Scriptable {
     };
 
     // See: https://github.com/nodejs/node/blob/7c452845b8d44287f5db96a7f19e7d395e1899ab/lib/internal/modules/cjs/helpers.js#L14
-    sandbox.require.resolve = (req) => Module._resolveFilename(req, sandbox.module);
+    sandbox.require.resolve = req => Module._resolveFilename(req, sandbox.module);
 
     const scriptCode = fs.readFileSync(scriptFile);
     const script = vm.createScript(scriptCode, scriptFile);
