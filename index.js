@@ -17,7 +17,7 @@ class Scriptable {
     this.stdout = process.stdout;
     this.stderr = process.stderr;
 
-    Object.keys(this.getScriptHooks()).forEach((event) => {
+    Object.keys(this.getScriptHooks()).forEach(event => {
       this.hooks[event] = this.runScript(event);
     }, this);
   }
@@ -33,7 +33,7 @@ class Scriptable {
 
       const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
 
-      return Bluebird.each(scripts, (script) => {
+      return Bluebird.each(scripts, script => {
         if (fs.existsSync(script) && path.extname(script) === '.js') {
           return this.runJavascriptFile(script);
         }

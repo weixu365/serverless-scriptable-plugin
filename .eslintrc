@@ -12,6 +12,7 @@ rules:
   max-len: [error, {code: 120, tabWidth: 2, ignoreUrls: true}]
   indent: [error, 2, {"FunctionDeclaration": {"parameters": "first"}}]
   no-underscore-dangle: off
+  arrow-parens: [error, "as-needed"]
 
 env:
   es6: true
