@@ -5,9 +5,9 @@ on: [push, pull_request]
 jobs:
   Test:
     name: Unit Test
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         node-version: [12]
     steps:
       - uses: actions/checkout@v2
@@ -23,9 +23,10 @@ jobs:
 
   Release:
     name: Publish to npm
+    os: [ubuntu-latest]
+
     strategy:
       matrix:
-        os: [ubuntu-latest]
         node-version: [12]
 
     steps:
