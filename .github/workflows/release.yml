@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - *
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  Test:
+    name: Unit Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter && ./cc-test-reporter before-build
+      - run: npm test
+      - run: ./cc-test-reporter after-build -t lcov
+
+  Release:
+    name: Publish to npm
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run semantic-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
