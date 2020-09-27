@@ -23,7 +23,7 @@ jobs:
 
   Release:
     name: Publish to npm
-    os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
