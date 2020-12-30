@@ -49,7 +49,6 @@ describe('ScriptablePluginTest', () => {
       test: [
         `echo ${randomString}`,
         `echo ${randomString2}`,
-        'something',
       ],
       showCommands: false,
       showStdoutOutput: false,
@@ -60,7 +59,7 @@ describe('ScriptablePluginTest', () => {
 
     return runScript(scriptable, 'test')
       .then(() => {
-        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+        console.log('Should has no any output');
       });
   });
 
