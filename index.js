@@ -16,8 +16,27 @@ class Scriptable {
     this.stdin = process.stdin;
     this.stdout = process.stdout;
     this.stderr = process.stderr;
+    this.showCommands = true;
 
-    Object.keys(this.getScriptHooks()).forEach(event => {
+    const scriptHooks = this.getScriptHooks();
+
+    if (typeof scriptHooks.showCommands !== 'undefined' && !scriptHooks.showCommands) {
+      this.showCommands = scriptHooks.showCommands;
+    }
+
+    if (typeof scriptHooks.showStdoutOutput !== 'undefined' && !scriptHooks.showStdoutOutput) {
+      console.log('Not showing command output because showStdoutOutput is false');
+      this.stdout = 'ignore';
+    }
+    if (typeof scriptHooks.showStderrOutput !== 'undefined' && !scriptHooks.showStderrOutput) {
+      console.log('Not showing command error output because showStderrOutput is false');
+      this.stderr = 'ignore';
+    }
+    delete scriptHooks.showCommands;
+    delete scriptHooks.showStdoutOutput;
+    delete scriptHooks.showStderrOutput;
+
+    Object.keys(scriptHooks).forEach(event => {
       this.hooks[event] = this.runScript(event);
     }, this);
   }
@@ -44,12 +63,18 @@ class Scriptable {
   }
 
   runCommand(hookScript) {
-    console.log(`Running command: ${hookScript}`);
+    if (this.showCommands) {
+      console.log(`Running command: ${hookScript}`);
+    }
+
     return execSync(hookScript, { stdio: [this.stdin, this.stdout, this.stderr] });
   }
 
   runJavascriptFile(scriptFile) {
-    console.log(`Running javascript file: ${scriptFile}`);
+    if (this.showCommands) {
+      console.log(`Running javascript file: ${scriptFile}`);
+    }
+
     const buildModule = () => {
       const m = new Module(scriptFile, module.parent);
       m.exports = exports;

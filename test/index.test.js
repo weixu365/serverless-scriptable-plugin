@@ -42,10 +42,44 @@ describe('ScriptablePluginTest', () => {
       });
   });
 
+  it('should able to suppress outputs', () => {
+    const scriptable = new Scriptable(serviceWithScripts({
+      test: [
+        'bash -c "echo this should not be visible on console"',
+      ],
+      showCommands: false,
+      showStdoutOutput: false,
+      showStderrOutput: false,
+    }));
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        console.log('Should has no any output');
+      });
+  });
+
+  it('Manual check: should able to print all outputs', () => {
+    const randomString = `current time ${new Date().getTime()}`;
+    const randomString2 = `current time 2 ${new Date().getTime()}`;
+    const scriptable = new Scriptable(serviceWithScripts({
+      test: [
+        `echo ${randomString}`,
+        `echo ${randomString2}`,
+      ],
+    }));
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        console.log('Done');
+      });
+  });
+
   it('should support color in child process', () => {
     const serverless = serviceWithScripts({ test: 'test/scripts/check-is-support-colors.js' });
     const scriptable = new Scriptable(serverless);
 
+    process.env.CI = 'Github_Action';
+    process.env.TRAVIS = 1;
     return runScript(scriptable, 'test')
       .then(() => expect(serverless.supportColorLevel).greaterThan(0));
   });
@@ -70,6 +104,22 @@ describe('ScriptablePluginTest', () => {
     fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
 
     const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
+  it('should run javascript in quiet mode', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithScripts({
+      test: scriptFile.name,
+      showCommands: false,
+      showStdoutOutput: false,
+      showStderrOutput: false,
+    });
     const scriptable = new Scriptable(serverless);
 
     return runScript(scriptable, 'test')
@@ -177,9 +227,8 @@ describe('ScriptablePluginTest', () => {
 
   it('manual check: should run command with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'node test/scripts/test-with-color.js' }));
-
     return runScript(scriptable, 'test');
-  });
+  }).timeout(5000);
 
   it('manual check: should run js with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'test/scripts/test-with-color.js' }));
