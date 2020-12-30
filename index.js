@@ -26,11 +26,11 @@ class Scriptable {
 
     if (typeof scriptHooks.showStdoutOutput !== 'undefined' && !scriptHooks.showStdoutOutput) {
       console.log('Not showing command output because showStdoutOutput is false');
-      this.stdout = 0;
+      this.stdout = 'ignore';
     }
     if (typeof scriptHooks.showStderrOutput !== 'undefined' && !scriptHooks.showStderrOutput) {
       console.log('Not showing command error output because showStderrOutput is false');
-      this.stderr = 0;
+      this.stderr = 'ignore';
     }
     delete scriptHooks.showCommands;
     delete scriptHooks.showStdoutOutput;
