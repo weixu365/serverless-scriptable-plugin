@@ -43,19 +43,14 @@ describe('ScriptablePluginTest', () => {
   });
 
   it('should able to suppress outputs', () => {
-    const randomString = `current time ${new Date().getTime()}`;
-    const randomString2 = `current time 2 ${new Date().getTime()}`;
     const scriptable = new Scriptable(serviceWithScripts({
       test: [
-        `echo ${randomString}`,
-        `echo ${randomString2}`,
+        'echo this should not be visible on console',
       ],
       showCommands: false,
       showStdoutOutput: false,
       showStderrOutput: false,
     }));
-
-    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
 
     return runScript(scriptable, 'test')
       .then(() => {
@@ -109,6 +104,22 @@ describe('ScriptablePluginTest', () => {
     fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
 
     const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
+  it('should run javascript in quiet mode', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithScripts({
+      test: scriptFile.name,
+      showCommands: false,
+      showStdoutOutput: false,
+      showStderrOutput: false,
+    });
     const scriptable = new Scriptable(serverless);
 
     return runScript(scriptable, 'test')
@@ -216,9 +227,8 @@ describe('ScriptablePluginTest', () => {
 
   it('manual check: should run command with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'node test/scripts/test-with-color.js' }));
-
     return runScript(scriptable, 'test');
-  });
+  }).timeout(5000);
 
   it('manual check: should run js with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'test/scripts/test-with-color.js' }));
