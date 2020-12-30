@@ -42,10 +42,50 @@ describe('ScriptablePluginTest', () => {
       });
   });
 
+  it('should able to suppress outputs', () => {
+    const randomString = `current time ${new Date().getTime()}`;
+    const randomString2 = `current time 2 ${new Date().getTime()}`;
+    const scriptable = new Scriptable(serviceWithScripts({
+      test: [
+        `echo ${randomString}`,
+        `echo ${randomString2}`,
+        'something',
+      ],
+      showCommands: false,
+      showStdoutOutput: false,
+      showStderrOutput: false,
+    }));
+
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      });
+  });
+
+  it('Manual check: should able to print all outputs', () => {
+    const randomString = `current time ${new Date().getTime()}`;
+    const randomString2 = `current time 2 ${new Date().getTime()}`;
+    const scriptable = new Scriptable(serviceWithScripts({
+      test: [
+        `echo ${randomString}`,
+        `echo ${randomString2}`,
+      ],
+    }));
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        console.log("Done")
+      });
+  });
+
   it('should support color in child process', () => {
     const serverless = serviceWithScripts({ test: 'test/scripts/check-is-support-colors.js' });
     const scriptable = new Scriptable(serverless);
 
+    process.env.CI = 'Github_Action'
+    process.env.TRAVIS = 1
     return runScript(scriptable, 'test')
       .then(() => expect(serverless.supportColorLevel).greaterThan(0));
   });

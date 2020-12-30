@@ -7,9 +7,9 @@
 
 What's the plugins for?
 ------------------------
-This plugin add script support to Serverless 1.0 which enables you to customize Serverless behavior without writing a plugin. 
+This plugin allows you to write scripts to customize Serverless behavior for Serverless 1.x and upper
 
-It allows you to run nodejs script in any build stage.
+It also supports running node.js scripts in any build stage.
 
 
 Quick Start
@@ -117,6 +117,20 @@ Example
     package:
       artifact: .serverless/package.zip
     ```
+
+
+5. Suppress console output (Optional)
+   You could control what to show during running commands, in case there are sensitive info in command or console output.
+
+    ```yml
+        custom:
+          scriptHooks:
+            showStdoutOutput: false # Default true. true: output stderr to console, false: output nothing
+            showStderrOutput: false # Default true. true: output stderr to console, false: output nothing
+            showCommands: false # Default true. true: show the command before execute, false: do not show commands
+            ...
+    ```
+
 Hooks
 -----------
 The serverless lifecycle hooks are different to providers, here's a reference of AWS hooks:
