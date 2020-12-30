@@ -4,7 +4,7 @@ const supportsColor = colorSupport({ ignoreTTY: true });
 
 console.log(`check if support colors in current process? ${JSON.stringify(supportsColor)}`);
 
-if (typeof serverless !== 'undefined' && serverless !== null){
+if (typeof serverless !== 'undefined' && serverless !== null) {
   serverless.supportColorLevel = supportsColor.level;
 
   if (serverless.supportColorLevel > 0) {
@@ -15,4 +15,3 @@ if (typeof serverless !== 'undefined' && serverless !== null){
 } else {
   console.error('IGNORED: not running under serverless');
 }
-

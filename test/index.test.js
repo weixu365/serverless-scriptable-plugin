@@ -76,7 +76,7 @@ describe('ScriptablePluginTest', () => {
 
     return runScript(scriptable, 'test')
       .then(() => {
-        console.log("Done")
+        console.log('Done');
       });
   });
 
@@ -84,8 +84,8 @@ describe('ScriptablePluginTest', () => {
     const serverless = serviceWithScripts({ test: 'test/scripts/check-is-support-colors.js' });
     const scriptable = new Scriptable(serverless);
 
-    process.env.CI = 'Github_Action'
-    process.env.TRAVIS = 1
+    process.env.CI = 'Github_Action';
+    process.env.TRAVIS = 1;
     return runScript(scriptable, 'test')
       .then(() => expect(serverless.supportColorLevel).greaterThan(0));
   });

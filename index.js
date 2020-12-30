@@ -25,11 +25,11 @@ class Scriptable {
     }
 
     if (typeof scriptHooks.showStdoutOutput !== 'undefined' && !scriptHooks.showStdoutOutput) {
-      console.log("Not showing command output because showStdoutOutput is false")
+      console.log('Not showing command output because showStdoutOutput is false');
       this.stdout = 0;
     }
     if (typeof scriptHooks.showStderrOutput !== 'undefined' && !scriptHooks.showStderrOutput) {
-      console.log("Not showing command error output because showStderrOutput is false")
+      console.log('Not showing command error output because showStderrOutput is false');
       this.stderr = 0;
     }
     delete scriptHooks.showCommands;
@@ -63,7 +63,7 @@ class Scriptable {
   }
 
   runCommand(hookScript) {
-    if(this.showCommands) {
+    if (this.showCommands) {
       console.log(`Running command: ${hookScript}`);
     }
 
@@ -71,7 +71,7 @@ class Scriptable {
   }
 
   runJavascriptFile(scriptFile) {
-    if(this.showCommands) {
+    if (this.showCommands) {
       console.log(`Running javascript file: ${scriptFile}`);
     }
 
