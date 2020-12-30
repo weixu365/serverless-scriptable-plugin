@@ -45,7 +45,7 @@ describe('ScriptablePluginTest', () => {
   it('should able to suppress outputs', () => {
     const scriptable = new Scriptable(serviceWithScripts({
       test: [
-        'echo this should not be visible on console',
+        'bash -c "echo this should not be visible on console"',
       ],
       showCommands: false,
       showStdoutOutput: false,
