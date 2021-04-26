@@ -18,7 +18,7 @@ class Scriptable {
     this.stderr = process.stderr;
     this.showCommands = true;
 
-    const scriptHooks = this.getScriptHooks();
+    const scriptHooks = this.getScripts('scriptHooks');
 
     if (typeof scriptHooks.showCommands !== 'undefined' && !scriptHooks.showCommands) {
       this.showCommands = scriptHooks.showCommands;
@@ -37,20 +37,18 @@ class Scriptable {
     delete scriptHooks.showStderrOutput;
 
     Object.keys(scriptHooks).forEach(event => {
-      this.hooks[event] = this.runScript(event);
+      this.hooks[event] = this.runScript(scriptHooks[event]);
     }, this);
   }
 
-  getScriptHooks() {
+  getScripts(namespace) {
     const { custom } = this.serverless.service;
-    return custom && custom.scriptHooks ? custom.scriptHooks : {};
+    return custom && custom[namespace] ? custom[namespace] : {};
   }
 
-  runScript(event) {
+  runScript(eventScript) {
     return () => {
-      const hookScript = this.getScriptHooks()[event];
-
-      const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
+      const scripts = Array.isArray(eventScript) ? eventScript : [eventScript];
 
       return Bluebird.each(scripts, script => {
         if (fs.existsSync(script) && path.extname(script) === '.js') {
@@ -62,12 +60,12 @@ class Scriptable {
     };
   }
 
-  runCommand(hookScript) {
+  runCommand(script) {
     if (this.showCommands) {
-      console.log(`Running command: ${hookScript}`);
+      console.log(`Running command: ${script}`);
     }
 
-    return execSync(hookScript, { stdio: [this.stdin, this.stdout, this.stderr] });
+    return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
   }
 
   runJavascriptFile(scriptFile) {
