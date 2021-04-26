@@ -12,38 +12,64 @@ class Scriptable {
     this.serverless = serverless;
     this.options = options;
     this.hooks = {};
+    this.commands = {};
 
     this.stdin = process.stdin;
     this.stdout = process.stdout;
     this.stderr = process.stderr;
     this.showCommands = true;
 
-    const scriptHooks = this.getScripts('scriptHooks');
+    const scriptable = this.getScripts('scriptable') || {};
+    const legacyScriptHooks = this.getScripts('scriptHooks');
 
-    if (typeof scriptHooks.showCommands !== 'undefined' && !scriptHooks.showCommands) {
-      this.showCommands = scriptHooks.showCommands;
+    if (legacyScriptHooks) {
+      console.log('Warning: The `scriptHooks` property is deprecated.');
+      console.log('Rename it to `scriptable` and move all script hooks, but not log options, into a `hooks` subkey.');
+
+      const { showCommands, showStdoutOutput, showStderrOutput } = legacyScriptHooks;
+
+      delete legacyScriptHooks.showCommands;
+      delete legacyScriptHooks.showStdoutOutput;
+      delete legacyScriptHooks.showStderrOutput;
+
+      Object.assign(scriptable, {
+        showCommands, showStdoutOutput, showStderrOutput, hooks: legacyScriptHooks,
+      });
     }
 
-    if (typeof scriptHooks.showStdoutOutput !== 'undefined' && !scriptHooks.showStdoutOutput) {
+    if (typeof scriptable.showCommands !== 'undefined' && !scriptable.showCommands) {
+      this.showCommands = scriptable.showCommands;
+    }
+
+    if (typeof scriptable.showStdoutOutput !== 'undefined' && !scriptable.showStdoutOutput) {
       console.log('Not showing command output because showStdoutOutput is false');
       this.stdout = 'ignore';
     }
-    if (typeof scriptHooks.showStderrOutput !== 'undefined' && !scriptHooks.showStderrOutput) {
+
+    if (typeof scriptable.showStderrOutput !== 'undefined' && !scriptable.showStderrOutput) {
       console.log('Not showing command error output because showStderrOutput is false');
       this.stderr = 'ignore';
     }
-    delete scriptHooks.showCommands;
-    delete scriptHooks.showStdoutOutput;
-    delete scriptHooks.showStderrOutput;
 
-    Object.keys(scriptHooks).forEach(event => {
-      this.hooks[event] = this.runScript(scriptHooks[event]);
+    // Hooks are run at serverless lifecycle events.
+    Object.keys(scriptable.hooks || {}).forEach(event => {
+      this.hooks[event] = this.runScript(scriptable.hooks[event]);
+    }, this);
+
+    // Commands are run by user.
+    Object.keys(scriptable.commands || {}).forEach(name => {
+      this.hooks[`${name}:runcmd`] = this.runScript(scriptable.commands[name]);
+
+      this.commands[name] = {
+        usage: `Run ${scriptable.commands[name]}`,
+        lifecycleEvents: ['runcmd'],
+      };
     }, this);
   }
 
   getScripts(namespace) {
     const { custom } = this.serverless.service;
-    return custom && custom[namespace] ? custom[namespace] : {};
+    return custom && custom[namespace];
   }
 
   runScript(eventScript) {
