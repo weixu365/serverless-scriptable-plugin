@@ -19,45 +19,29 @@ class Scriptable {
     this.stderr = process.stderr;
     this.showCommands = true;
 
-    const scriptable = this.getScripts('scriptable') || {};
-    const legacyScriptHooks = this.getScripts('scriptHooks');
+    const scriptable = this.getMergedConfig();
 
-    if (legacyScriptHooks) {
-      console.log('Warning: The `scriptHooks` property is deprecated.');
-      console.log('Rename it to `scriptable` and move all script hooks, but not log options, into a `hooks` subkey.');
-
-      const { showCommands, showStdoutOutput, showStderrOutput } = legacyScriptHooks;
-
-      delete legacyScriptHooks.showCommands;
-      delete legacyScriptHooks.showStdoutOutput;
-      delete legacyScriptHooks.showStderrOutput;
-
-      Object.assign(scriptable, {
-        showCommands, showStdoutOutput, showStderrOutput, hooks: legacyScriptHooks,
-      });
+    if (this.isFalse(scriptable.showCommands)) {
+      this.showCommands = false;
     }
 
-    if (typeof scriptable.showCommands !== 'undefined' && !scriptable.showCommands) {
-      this.showCommands = scriptable.showCommands;
-    }
-
-    if (typeof scriptable.showStdoutOutput !== 'undefined' && !scriptable.showStdoutOutput) {
+    if (this.isFalse(scriptable.showStdoutOutput)) {
       console.log('Not showing command output because showStdoutOutput is false');
       this.stdout = 'ignore';
     }
 
-    if (typeof scriptable.showStderrOutput !== 'undefined' && !scriptable.showStderrOutput) {
+    if (this.isFalse(scriptable.showStderrOutput)) {
       console.log('Not showing command error output because showStderrOutput is false');
       this.stderr = 'ignore';
     }
 
     // Hooks are run at serverless lifecycle events.
-    Object.keys(scriptable.hooks || {}).forEach(event => {
+    Object.keys(scriptable.hooks).forEach(event => {
       this.hooks[event] = this.runScript(scriptable.hooks[event]);
     }, this);
 
     // Commands are run by user.
-    Object.keys(scriptable.commands || {}).forEach(name => {
+    Object.keys(scriptable.commands).forEach(name => {
       this.hooks[`${name}:runcmd`] = this.runScript(scriptable.commands[name]);
 
       this.commands[name] = {
@@ -65,6 +49,32 @@ class Scriptable {
         lifecycleEvents: ['runcmd'],
       };
     }, this);
+  }
+
+  getMergedConfig() {
+    const legacyScriptHooks = this.getScripts('scriptHooks') || {};
+    const scriptable = this.getScripts('scriptable') || {};
+
+    const hooks = { ...legacyScriptHooks, ...scriptable.hooks}
+    delete hooks.showCommands;
+    delete hooks.showStdoutOutput;
+    delete hooks.showStderrOutput;
+
+    return {
+      showCommands: this.first(scriptable.showCommands, legacyScriptHooks.showCommands),
+      showStdoutOutput: this.first(scriptable.showStdoutOutput, legacyScriptHooks.showStdoutOutput),
+      showStderrOutput: this.first(scriptable.showStderrOutput, legacyScriptHooks.showStderrOutput),
+      hooks: hooks,
+      commands: scriptable.commands || {},
+    };
+  }
+
+  isFalse(val) {
+    return typeof val !== 'undefined' && !val;
+  }
+
+  first(...vals) {
+    return vals.find(_ => ![undefined, null].includes(_));
   }
 
   getScripts(namespace) {

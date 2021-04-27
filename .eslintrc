@@ -7,6 +7,7 @@ parserOptions:
   ecmaVersion: 8
 
 rules:
+  class-methods-use-this: off
   no-console: off
   strict: off
   max-len: [error, {code: 120, tabWidth: 2, ignoreUrls: true}]

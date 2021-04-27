@@ -208,14 +208,119 @@ describe('ScriptablePluginTest', () => {
 
     const serverless = serviceWithCustom({
       scriptName: scriptFile.name,
-      scriptHooks: { test: '${self:custom.scriptName}' },
+      scriptHooks: { test: scriptFile.name },
     });
 
     const scriptable = new Scriptable(serverless);
-    serverless.service.custom.scriptHooks.test = scriptFile.name;
 
     return runScript(scriptable, 'test')
       .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
+  it('should able to load scriptHooks', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithCustom({
+      scriptName: scriptFile.name,
+      scriptHooks: {
+        showCommands: false,
+        showStdoutOutput: false,
+        showStderrOutput: false,
+        test: 'echo legacy-script',
+      },
+    });
+
+    const scriptable = new Scriptable(serverless);
+
+    expect(scriptable.showCommands).equal(false);
+    expect(scriptable.stdout).equal('ignore');
+    expect(scriptable.stderr).equal('ignore');
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string('legacy-script');
+        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      });
+  });
+
+  it('should able to load scriptable configs', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithCustom({
+      scriptName: scriptFile.name,
+      scriptable: {
+        showCommands: true,
+        showStdoutOutput: true,
+        showStderrOutput: true,
+        hooks: {
+          test: 'echo scriptable-script',
+        },
+        commands: {
+          customCommand: 'echo custom command',
+        },
+      },
+    });
+
+    const scriptable = new Scriptable(serverless);
+
+    expect(scriptable.showCommands).equal(true);
+    expect(scriptable.stdout).equal(process.stdout);
+    expect(scriptable.stderr).equal(process.stderr);
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string('scriptable-script');
+        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      });
+  });
+
+  it('should support scriptHooks and scriptable configs', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithCustom({
+      scriptName: scriptFile.name,
+      scriptHooks: {
+        showCommands: false,
+        showStdoutOutput: false,
+        showStderrOutput: false,
+        test: 'echo legacy-script',
+      },
+      scriptable: {
+        showCommands: true,
+        showStdoutOutput: true,
+        showStderrOutput: true,
+        hooks: {
+          test: 'echo scriptable-script',
+        },
+        commands: {
+          customCommand: 'echo custom command',
+        },
+      },
+    });
+
+    const scriptable = new Scriptable(serverless);
+
+    expect(scriptable.showCommands).equal(true);
+    expect(scriptable.stdout).equal(process.stdout);
+    expect(scriptable.stderr).equal(process.stderr);
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string('scriptable-script');
+        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      });
   });
 
   it('should skip hook registration when no hook scripts', () => {

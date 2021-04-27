@@ -4,7 +4,8 @@
   "description": "Add scripts(nodejs) support to serverless 1.x",
   "main": "index.js",
   "scripts": {
-    "test": "eslint -f stylish . && nyc --reporter=lcov mocha && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "check-style": "eslint -f stylish .",
+    "test": "nyc --reporter=lcov mocha && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
     "semantic-release": "semantic-release"
   },
   "repository": {
