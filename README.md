@@ -5,8 +5,7 @@
 [![Issue Count](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
 
 
-What's the plugins for?
-------------------------
+## What's the plugins for?
 This plugin allows you to write scripts to customize Serverless behavior for Serverless 1.x and upper
 
 It also supports running node.js scripts in any build stage.
@@ -15,8 +14,7 @@ Features:
 - Run command or nodejs scripts in any build stage (serverless lifecycle)
 - Add custom commands to serverless, e.g. npx serverless <YOUR-COMMAND> [Example](#custom-command)
 
-Quick Start
--------------
+## Quick Start
 1. Install
     ```bash
     npm install --save-dev serverless-scriptable-plugin
@@ -32,8 +30,7 @@ Quick Start
           before:package:createDeploymentArtifacts: npm run build
     ```
 
-Upgrade from <=1.1.0
----------
+## Upgrade from <=1.1.0
 This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatible.
 
 Example using the previous schema:
@@ -58,8 +55,7 @@ custom:
       before:package:createDeploymentArtifacts: npm run build
 ```
 
-Example
----------
+## Example
 1. Customize package behavior
 
     The following config is using babel for transcompilation and packaging only the required folders: dist and node_modules without aws-sdk
@@ -195,13 +191,11 @@ Example
           ...
     ```
 
-Hooks
------------
+## Hooks
 The serverless lifecycle hooks are different to providers, here's a reference of AWS hooks:
 https://gist.github.com/HyperBrain/50d38027a8f57778d5b0f135d80ea406#file-lifecycle-cheat-sheet-md
 
-Change Log
--------------
+## Change Log
 - Version 0.8.0 and above
   - Check details at https://github.com/weixu365/serverless-scriptable-plugin/releases
 
