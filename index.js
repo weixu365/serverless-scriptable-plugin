@@ -35,20 +35,8 @@ class Scriptable {
       this.stderr = 'ignore';
     }
 
-    // Hooks are run at serverless lifecycle events.
-    Object.keys(scriptable.hooks).forEach(event => {
-      this.hooks[event] = this.runScript(scriptable.hooks[event]);
-    }, this);
-
-    // Custom Serverless commands would run by `npx serverless <command-name>`
-    Object.keys(scriptable.commands).forEach(name => {
-      this.hooks[`${name}:runcmd`] = this.runScript(scriptable.commands[name]);
-
-      this.commands[name] = {
-        usage: `Run ${scriptable.commands[name]}`,
-        lifecycleEvents: ['runcmd'],
-      };
-    }, this);
+    this.setupHooks(scriptable.hooks);
+    this.setupCustomCommands(scriptable.commands);
   }
 
   getMergedConfig() {
@@ -67,6 +55,25 @@ class Scriptable {
       hooks,
       commands: scriptable.commands || {},
     };
+  }
+
+  setupHooks(hooks) {
+    // Hooks are run at serverless lifecycle events.
+    Object.keys(hooks).forEach(event => {
+      this.hooks[event] = this.runScript(hooks[event]);
+    }, this);
+  }
+
+  setupCustomCommands(commands) {
+    // Custom Serverless commands would run by `npx serverless <command-name>`
+    Object.keys(commands).forEach(name => {
+      this.hooks[`${name}:runcmd`] = this.runScript(commands[name]);
+
+      this.commands[name] = {
+        usage: `Run ${commands[name]}`,
+        lifecycleEvents: ['runcmd'],
+      };
+    }, this);
   }
 
   isFalse(val) {
