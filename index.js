@@ -81,7 +81,7 @@ class Scriptable {
   }
 
   first(...vals) {
-    return vals.find(_ => ![undefined, null].includes(_));
+    return vals.find(val => val != null);
   }
 
   getScripts(namespace) {

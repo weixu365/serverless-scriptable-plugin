@@ -31,7 +31,7 @@ Features:
     ```
 
 ## Upgrade from <=1.1.0
-This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatible.
+This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatibility.
 
 Example using the previous schema:
 
@@ -88,7 +88,7 @@ custom:
           before:migrate:runcmd: echo before migrating
           after:migrate:runcmd: echo after migrating
         commands:
-          migrate: echo Running migrating
+          migrate: echo Running migration
     ```
         
     Then you could run this command by:
