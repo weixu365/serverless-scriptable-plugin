@@ -12,45 +12,86 @@ class Scriptable {
     this.serverless = serverless;
     this.options = options;
     this.hooks = {};
+    this.commands = {};
 
     this.stdin = process.stdin;
     this.stdout = process.stdout;
     this.stderr = process.stderr;
     this.showCommands = true;
 
-    const scriptHooks = this.getScriptHooks();
+    const scriptable = this.getMergedConfig();
 
-    if (typeof scriptHooks.showCommands !== 'undefined' && !scriptHooks.showCommands) {
-      this.showCommands = scriptHooks.showCommands;
+    if (this.isFalse(scriptable.showCommands)) {
+      this.showCommands = false;
     }
 
-    if (typeof scriptHooks.showStdoutOutput !== 'undefined' && !scriptHooks.showStdoutOutput) {
+    if (this.isFalse(scriptable.showStdoutOutput)) {
       console.log('Not showing command output because showStdoutOutput is false');
       this.stdout = 'ignore';
     }
-    if (typeof scriptHooks.showStderrOutput !== 'undefined' && !scriptHooks.showStderrOutput) {
+
+    if (this.isFalse(scriptable.showStderrOutput)) {
       console.log('Not showing command error output because showStderrOutput is false');
       this.stderr = 'ignore';
     }
-    delete scriptHooks.showCommands;
-    delete scriptHooks.showStdoutOutput;
-    delete scriptHooks.showStderrOutput;
 
-    Object.keys(scriptHooks).forEach(event => {
-      this.hooks[event] = this.runScript(event);
+    this.setupHooks(scriptable.hooks);
+    this.setupCustomCommands(scriptable.commands);
+  }
+
+  getMergedConfig() {
+    const legacyScriptHooks = this.getScripts('scriptHooks') || {};
+    const scriptable = this.getScripts('scriptable') || {};
+
+    const hooks = { ...legacyScriptHooks, ...scriptable.hooks };
+    delete hooks.showCommands;
+    delete hooks.showStdoutOutput;
+    delete hooks.showStderrOutput;
+
+    return {
+      showCommands: this.first(scriptable.showCommands, legacyScriptHooks.showCommands),
+      showStdoutOutput: this.first(scriptable.showStdoutOutput, legacyScriptHooks.showStdoutOutput),
+      showStderrOutput: this.first(scriptable.showStderrOutput, legacyScriptHooks.showStderrOutput),
+      hooks,
+      commands: scriptable.commands || {},
+    };
+  }
+
+  setupHooks(hooks) {
+    // Hooks are run at serverless lifecycle events.
+    Object.keys(hooks).forEach(event => {
+      this.hooks[event] = this.runScript(hooks[event]);
     }, this);
   }
 
-  getScriptHooks() {
-    const { custom } = this.serverless.service;
-    return custom && custom.scriptHooks ? custom.scriptHooks : {};
+  setupCustomCommands(commands) {
+    // Custom Serverless commands would run by `npx serverless <command-name>`
+    Object.keys(commands).forEach(name => {
+      this.hooks[`${name}:runcmd`] = this.runScript(commands[name]);
+
+      this.commands[name] = {
+        usage: `Run ${commands[name]}`,
+        lifecycleEvents: ['runcmd'],
+      };
+    }, this);
   }
 
-  runScript(event) {
-    return () => {
-      const hookScript = this.getScriptHooks()[event];
+  isFalse(val) {
+    return val != null && !val;
+  }
 
-      const scripts = Array.isArray(hookScript) ? hookScript : [hookScript];
+  first(...vals) {
+    return vals.find(val => typeof val !== 'undefined');
+  }
+
+  getScripts(namespace) {
+    const { custom } = this.serverless.service;
+    return custom && custom[namespace];
+  }
+
+  runScript(eventScript) {
+    return () => {
+      const scripts = Array.isArray(eventScript) ? eventScript : [eventScript];
 
       return Bluebird.each(scripts, script => {
         if (fs.existsSync(script) && path.extname(script) === '.js') {
@@ -62,12 +103,12 @@ class Scriptable {
     };
   }
 
-  runCommand(hookScript) {
+  runCommand(script) {
     if (this.showCommands) {
-      console.log(`Running command: ${hookScript}`);
+      console.log(`Running command: ${script}`);
     }
 
-    return execSync(hookScript, { stdio: [this.stdin, this.stdout, this.stderr] });
+    return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
   }
 
   runJavascriptFile(scriptFile) {
