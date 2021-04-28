@@ -81,7 +81,7 @@ class Scriptable {
   }
 
   first(...vals) {
-    return vals.find(val => val != null);
+    return vals.find(val => typeof val !== 'undefined');
   }
 
   getScripts(namespace) {

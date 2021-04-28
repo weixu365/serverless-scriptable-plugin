@@ -344,6 +344,18 @@ describe('ScriptablePluginTest', () => {
     expect(scriptable.isFalse(0)).equal(true);
   });
 
+  it('should able to get the first non-undefined value', () => {
+    const serverless = { service: {} };
+    const scriptable = new Scriptable(serverless);
+
+    expect(scriptable.first(undefined, false)).equal(false);
+    expect(scriptable.first(null, false)).equal(null);
+    expect(scriptable.first(true, false)).equal(true);
+    expect(scriptable.first(false, false)).equal(false);
+    expect(scriptable.first(0, false)).equal(0);
+    expect(scriptable.first(1, false)).equal(1);
+  });
+
   it('manual check: should run command with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'node test/scripts/test-with-color.js' }));
     return runScript(scriptable, 'test');
