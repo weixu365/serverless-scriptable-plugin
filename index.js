@@ -67,11 +67,11 @@ class Scriptable {
   setupCustomCommands(commands) {
     // Custom Serverless commands would run by `npx serverless <command-name>`
     Object.keys(commands).forEach(name => {
-      this.hooks[`${name}:runcmd`] = this.runScript(commands[name]);
+      this.hooks[`${name}:command`] = this.runScript(commands[name]);
 
       this.commands[name] = {
         usage: `Run ${commands[name]}`,
-        lifecycleEvents: ['runcmd'],
+        lifecycleEvents: ['command'],
       };
     }, this);
   }

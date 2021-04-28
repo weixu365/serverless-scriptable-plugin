@@ -85,8 +85,8 @@ custom:
     custom:
       scriptable:
         hooks:
-          before:migrate:runcmd: echo before migrating
-          after:migrate:runcmd: echo after migrating
+          before:migrate:command: echo before migrating
+          after:migrate:command: echo after migrating
         commands:
           migrate: echo Running migration
     ```
