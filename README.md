@@ -11,21 +11,52 @@ This plugin allows you to write scripts to customize Serverless behavior for Ser
 
 It also supports running node.js scripts in any build stage.
 
+Features:
+- Run command or nodejs scripts in any build stage (serverless lifecycle)
+- Add custom commands to serverless, e.g. npx serverless <YOUR-COMMAND> [Example](#custom-command)
 
 Quick Start
 -------------
 1. Install
-
-        npm install --save-dev serverless-scriptable-plugin
-        
+    ```bash
+    npm install --save-dev serverless-scriptable-plugin
+    ```
 2. Add to Serverless config 
+    ```yaml
+    plugins:
+      - serverless-scriptable-plugin
 
-        plugins:
-          - serverless-scriptable-plugin
-    
-        custom:
-          scriptHooks:
-            before:package:createDeploymentArtifacts: npm run build
+    custom:
+      scriptable:
+        hooks:
+          before:package:createDeploymentArtifacts: npm run build
+    ```
+
+Upgrade from <=1.1.0
+---------
+This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatible.
+
+Example using the previous schema:
+
+```yaml
+plugins:
+  - serverless-scriptable-plugin
+
+custom:
+  scriptHooks:
+    before:package:createDeploymentArtifacts: npm run build
+```
+
+Changed to:
+```yaml
+plugins:
+  - serverless-scriptable-plugin
+
+custom:
+  scriptable:
+    hooks:
+      before:package:createDeploymentArtifacts: npm run build
+```
 
 Example
 ---------
@@ -38,8 +69,9 @@ Example
       - serverless-scriptable-plugin
 
     custom:
-      scriptHooks:
-        before:package:createDeploymentArtifacts: npm run build
+      scriptable:
+        hooks:
+          before:package:createDeploymentArtifacts: npm run build
 
     package:
       exclude:
@@ -49,7 +81,32 @@ Example
         - node_modules/aws-sdk/**
     ```
 
-2. Run any command as a hook script
+2. <a name="custom-command"></a>Add a custom command to serverless
+    ```yaml
+    plugins:
+      - serverless-scriptable-plugin
+
+    custom:
+      scriptable:
+        hooks:
+          before:migrate:runcmd: echo before migrating
+          after:migrate:runcmd: echo after migrating
+        commands:
+          migrate: echo Running migrating
+    ```
+        
+    Then you could run this command by:
+    ```bash
+    $ npx serverless migrate
+    Running command: echo before migrating
+    before migrating
+    Running command: echo Running migrating
+    Running migrating
+    Running command: echo after migrating
+    after migrating
+    ```
+
+3. Run any command as a hook script
 
     It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
  
@@ -58,23 +115,25 @@ Example
       - serverless-scriptable-plugin
     
     custom:
-      scriptHooks:
-        after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
+      scriptable:
+        hooks:
+          after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
     
     service: service-name
     package:
       artifact: .serverless/package.zip
     ```
    
-3. Create CloudWatch Log subscription filter for all Lambda function Log groups, e.g. subscribe to a Kinesis stream
+4. Create CloudWatch Log subscription filter for all Lambda function Log groups, e.g. subscribe to a Kinesis stream
   
     ```yml
     plugins:
       - serverless-scriptable-plugin
     
     custom:
-      scriptHooks:
-        after:package:compileEvents: build/serverless/add-log-subscriptions.js
+      scriptable:
+        hooks:
+          after:package:compileEvents: build/serverless/add-log-subscriptions.js
     
     provider:
       logSubscriptionDestinationArn: 'arn:aws:logs:ap-southeast-2:{account-id}:destination:'
@@ -99,7 +158,7 @@ Example
       );
     ```
 
-4. Run multiple commands for the serverless event
+5. Run multiple commands for the serverless event
 
    It's possible to run multiple commands for the same serverless event, e.g. Add CloudWatch log subscription and dynamodb auto scaling support
 
@@ -108,10 +167,11 @@ Example
       - serverless-scriptable-plugin
     
     custom:
-      scriptHooks:
-        after:package:createDeploymentArtifacts: 
-          - build/serverless/add-log-subscriptions.js
-          - build/serverless/add-dynamodb-auto-scaling.js
+      scriptable:
+        hooks:
+          after:package:createDeploymentArtifacts: 
+            - build/serverless/add-log-subscriptions.js
+            - build/serverless/add-dynamodb-auto-scaling.js
     
     service: service-name
     package:
@@ -119,16 +179,20 @@ Example
     ```
 
 
-5. Suppress console output (Optional)
+6. Suppress console output (Optional)
    You could control what to show during running commands, in case there are sensitive info in command or console output.
 
     ```yml
-        custom:
-          scriptHooks:
-            showStdoutOutput: false # Default true. true: output stderr to console, false: output nothing
-            showStderrOutput: false # Default true. true: output stderr to console, false: output nothing
-            showCommands: false # Default true. true: show the command before execute, false: do not show commands
-            ...
+    custom:
+      scriptable:
+        showStdoutOutput: false # Default true. true: output stderr to console, false: output nothing
+        showStderrOutput: false # Default true. true: output stderr to console, false: output nothing
+        showCommands: false # Default true. true: show the command before execute, false: do not show commands
+
+        hooks:
+          ...
+        commands:
+          ...
     ```
 
 Hooks

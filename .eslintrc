@@ -4,7 +4,7 @@ root: true
 extends: airbnb-base
 
 parserOptions:
-  ecmaVersion: 8
+  ecmaVersion: 2019
 
 rules:
   class-methods-use-this: off

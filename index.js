@@ -40,7 +40,7 @@ class Scriptable {
       this.hooks[event] = this.runScript(scriptable.hooks[event]);
     }, this);
 
-    // Commands are run by user.
+    // Custom Serverless commands would run by `npx serverless <command-name>`
     Object.keys(scriptable.commands).forEach(name => {
       this.hooks[`${name}:runcmd`] = this.runScript(scriptable.commands[name]);
 
@@ -55,7 +55,7 @@ class Scriptable {
     const legacyScriptHooks = this.getScripts('scriptHooks') || {};
     const scriptable = this.getScripts('scriptable') || {};
 
-    const hooks = { ...legacyScriptHooks, ...scriptable.hooks}
+    const hooks = { ...legacyScriptHooks, ...scriptable.hooks };
     delete hooks.showCommands;
     delete hooks.showStdoutOutput;
     delete hooks.showStderrOutput;
@@ -64,7 +64,7 @@ class Scriptable {
       showCommands: this.first(scriptable.showCommands, legacyScriptHooks.showCommands),
       showStdoutOutput: this.first(scriptable.showStdoutOutput, legacyScriptHooks.showStdoutOutput),
       showStderrOutput: this.first(scriptable.showStderrOutput, legacyScriptHooks.showStderrOutput),
-      hooks: hooks,
+      hooks,
       commands: scriptable.commands || {},
     };
   }
