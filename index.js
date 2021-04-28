@@ -77,7 +77,7 @@ class Scriptable {
   }
 
   isFalse(val) {
-    return typeof val !== 'undefined' && !val;
+    return val != null && !val;
   }
 
   first(...vals) {

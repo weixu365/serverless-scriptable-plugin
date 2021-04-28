@@ -330,6 +330,16 @@ describe('ScriptablePluginTest', () => {
     expect(scriptable.hooks).deep.equal({});
   });
 
+  it('should able to check boolean configs', () => {
+    const serverless = { service: {} };
+    const scriptable = new Scriptable(serverless);
+
+    expect(scriptable.isFalse(undefined)).equal(false);
+    expect(scriptable.isFalse(null)).equal(false);
+    expect(scriptable.isFalse(true)).equal(false);
+    expect(scriptable.isFalse(false)).equal(true);
+  });
+
   it('manual check: should run command with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'node test/scripts/test-with-color.js' }));
     return runScript(scriptable, 'test');
