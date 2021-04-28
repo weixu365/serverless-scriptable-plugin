@@ -337,7 +337,11 @@ describe('ScriptablePluginTest', () => {
     expect(scriptable.isFalse(undefined)).equal(false);
     expect(scriptable.isFalse(null)).equal(false);
     expect(scriptable.isFalse(true)).equal(false);
+    expect(scriptable.isFalse('0')).equal(false);
+    expect(scriptable.isFalse(1)).equal(false);
+
     expect(scriptable.isFalse(false)).equal(true);
+    expect(scriptable.isFalse(0)).equal(true);
   });
 
   it('manual check: should run command with color', () => {
