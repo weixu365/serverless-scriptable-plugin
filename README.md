@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/serverless-scriptable-plugin.svg)](https://badge.fury.io/js/serverless-scriptable-plugin)
+![npm](https://img.shields.io/npm/dw/serverless-scriptable-plugin?style=plastic)
 [![Build Status](https://travis-ci.org/weixu365/serverless-scriptable-plugin.svg?branch=master)](https://travis-ci.org/weixu365/serverless-scriptable-plugin)
 [![Test Coverage](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/coverage)
 [![Code Climate](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
@@ -11,8 +12,8 @@ This plugin allows you to write scripts to customize Serverless behavior for Ser
 It also supports running node.js scripts in any build stage.
 
 Features:
-- Run command or nodejs scripts in any build stage (serverless lifecycle)
-- Add custom commands to serverless, e.g. npx serverless <YOUR-COMMAND> [Example](#custom-command)
+- Run any command or nodejs scripts in any stage of serverless lifecycle
+- Add custom commands to serverless, e.g. `npx serverless YOUR-COMMAND` [Example](#custom-command)
 
 ## Quick Start
 1. Install
@@ -26,14 +27,19 @@ Features:
 
     custom:
       scriptable:
+        # add custom hooks
         hooks:
           before:package:createDeploymentArtifacts: npm run build
+
+        # or custom commands
+        commands:
+          migrate: echo Running migration
     ```
 
 ## Upgrade from <=1.1.0
 This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatibility.
 
-Example using the previous schema:
+Example that using the previous schema:
 
 ```yaml
 plugins:
