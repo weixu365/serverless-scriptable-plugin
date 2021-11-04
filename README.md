@@ -4,7 +4,7 @@
 [![Test Coverage](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/coverage)
 [![Code Climate](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
 [![Issue Count](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
-
+[![license](https://img.shields.io/npm/l/serverless-scriptable-plugin.svg)](https://www.npmjs.com/package/serverless-scriptable-plugin)
 
 ## What's the plugins for?
 This plugin allows you to write scripts to customize Serverless behavior for Serverless 1.x and upper
@@ -107,6 +107,35 @@ custom:
     Running command: echo after migrating
     after migrating
     ```
+
+3. Deploy python code to AWS lambda
+    ```yml
+    plugins:
+      - serverless-scriptable-plugin
+    
+    custom:
+      scriptable:
+          hooks:
+            after:package:createDeploymentArtifacts: make package
+
+    # serverless will package a zip file, then we will override the file using `make package`
+    package:
+      patterns:
+        - "!**"
+        - "<your src folder>/**"
+    ```
+
+    and a make target to create the desired zip file (https://docs.aws.amazon.com/lambda/latest/dg/python-package.html)
+
+    ```makefile
+    package:
+      rm -rf output && mkdir -p output
+      pip install -q -r requirements.txt --target output/libs
+      (cd output/libs && zip -r ../your-service-name.zip . -x '*__pycache__*')
+      (zip -r output/your-service-name.zip your-src-folder -x '*__pycache__*')
+    ```
+
+    Serverless would then deploy the zip file you built to aws lambda.
 
 3. Run any command as a hook script
 

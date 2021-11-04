@@ -24,7 +24,7 @@
     "customize",
     "plugin"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/weixu365/serverless-scriptable-plugin/issues"
   },
