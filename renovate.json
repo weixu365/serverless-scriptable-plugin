@@ -4,7 +4,12 @@
     "group:all",
     ":disableDependencyDashboard"
   ],
-  "automerge": true,
-  "automergeType": "pr",
-  "platformAutomerge": true
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ]
 }
