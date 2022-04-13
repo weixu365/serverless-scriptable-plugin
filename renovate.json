@@ -3,5 +3,6 @@
     "config:base",
     "group:all",
     ":disableDependencyDashboard"
-  ]
+  ],
+  "platformAutomerge": true,
 }
