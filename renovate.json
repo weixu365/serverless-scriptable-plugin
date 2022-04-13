@@ -4,6 +4,7 @@
     "group:all",
     ":disableDependencyDashboard"
   ],
+  "recreateClosed": true,
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
