@@ -4,5 +4,7 @@
     "group:all",
     ":disableDependencyDashboard"
   ],
+  "automerge": true,
+  "automergeType": "pr",
   "platformAutomerge": true
 }
