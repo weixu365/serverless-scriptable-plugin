@@ -13,7 +13,7 @@ It also supports running node.js scripts in any build stage.
 
 Features:
 - Run any command or nodejs scripts in any stage of serverless lifecycle
-- Add custom commands to serverless, e.g. `npx serverless YOUR-COMMAND` [Example](#custom-command)
+- Add custom commands to serverless, e.g. `npx serverless YOUR-COMMAND` [Example](#add-a-custom-command)
 
 ## Quick Start
 1. Install
@@ -37,6 +37,7 @@ Features:
     ```
 
 ## Upgrade from <=1.1.0
+
 This `serverless-scriptable-plugin` now supports event hooks and custom commands. Here's an example of upgrade to the latest schema. The previous config schema still works for backward compatibility.
 
 Example that using the previous schema:
@@ -61,8 +62,8 @@ custom:
       before:package:createDeploymentArtifacts: npm run build
 ```
 
-## Example
-1. Customize package behavior
+## Examples
+1. ### Customize package behavior
 
     The following config is using babel for transcompilation and packaging only the required folders: dist and node_modules without aws-sdk
 
@@ -83,7 +84,7 @@ custom:
         - node_modules/aws-sdk/**
     ```
 
-2. <a name="custom-command"></a>Add a custom command to serverless
+1. ### <a name="custom-command"></a>Add a custom command
     ```yaml
     plugins:
       - serverless-scriptable-plugin
@@ -108,7 +109,7 @@ custom:
     after migrating
     ```
 
-3. Deploy python code to AWS lambda
+1. ### Deploy python function
     ```yml
     plugins:
       - serverless-scriptable-plugin
@@ -137,7 +138,7 @@ custom:
 
     Serverless would then deploy the zip file you built to aws lambda.
 
-3. Run any command as a hook script
+1. ### Run any command as a hook script
 
     It's possible to run any command as the hook script, e.g. use the following command to zip the required folders
  
@@ -148,14 +149,16 @@ custom:
     custom:
       scriptable:
         hooks:
-          after:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
+          before:package:createDeploymentArtifacts: zip -q -r .serverless/package.zip src node_modules
     
     service: service-name
     package:
       artifact: .serverless/package.zip
     ```
    
-4. Create CloudWatch Log subscription filter for all Lambda function Log groups, e.g. subscribe to a Kinesis stream
+1. ### Dynamically change resources
+
+    Create CloudWatch Log subscription filter for all Lambda function Log groups, e.g. subscribe to a Kinesis stream
   
     ```yml
     plugins:
@@ -189,7 +192,7 @@ custom:
       );
     ```
 
-5. Run multiple commands for the serverless event
+1. ### Run multiple commands
 
    It's possible to run multiple commands for the same serverless event, e.g. Add CloudWatch log subscription and dynamodb auto scaling support
 
@@ -210,7 +213,7 @@ custom:
     ```
 
 
-6. Suppress console output (Optional)
+1. ### Suppress console output
    You could control what to show during running commands, in case there are sensitive info in command or console output.
 
     ```yml
