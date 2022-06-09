@@ -39,7 +39,7 @@
     "eslint-plugin-import": "2.26.0",
     "mocha": "10.0.0",
     "nyc": "15.1.0",
-    "semantic-release": "19.0.2",
+    "semantic-release": "19.0.3",
     "tmp": "0.2.1"
   },
   "dependencies": {
