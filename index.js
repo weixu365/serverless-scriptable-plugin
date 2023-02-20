@@ -125,11 +125,18 @@ class Scriptable {
       return m;
     };
 
+    const globalProperties = Object.fromEntries(
+      Object.getOwnPropertyNames(global).map(
+        key => [key, global[key]],
+      ),
+    );
+    delete globalProperties.globalThis;
+    delete globalProperties.global;
+
     const sandbox = {
+      ...globalProperties,
       module: buildModule(),
       require: id => sandbox.module.require(id),
-      console,
-      process,
       serverless: this.serverless,
       options: this.options,
       __filename: scriptFile,
