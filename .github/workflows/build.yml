@@ -32,7 +32,7 @@ jobs:
         env: 
           CI: Github_Action
           TRAVIS: 1
-      - run: ./cc-test-reporter after-build -t lcov1 || true
+      - run: ./cc-test-reporter after-build -t lcov || true
 
   Release:
     name: Publish to npm
