@@ -146,6 +146,32 @@ describe('ScriptablePluginTest', () => {
       .then(() => expect(serverless.service.artifact).equal(`hello${moduleName}`));
   });
 
+  it('should able to use default classes from node in javascript', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'new URL("http://localhost"); serverless.service.artifact = "test.zip";');
+
+    const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
+  it('should able to use exports object in javascript', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(
+      scriptFile.name,
+      `Object.defineProperty(exports, "__esModule", { value: true });
+      serverless.service.artifact = "test.zip";`,
+    );
+
+    const serverless = serviceWithScripts({ test: scriptFile.name });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal('test.zip'));
+  });
+
   it('should wait for async method to be finished', () => {
     const scriptFile = tmp.fileSync({ postfix: '.js' });
     const script = 'require("bluebird").delay(100).then(() => serverless.service.artifact = "test.zip")';

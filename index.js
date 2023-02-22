@@ -125,15 +125,23 @@ class Scriptable {
       return m;
     };
 
+    const globalProperties = Object.fromEntries(
+      Object.getOwnPropertyNames(global).map(
+        key => [key, global[key]],
+      ),
+    );
+    delete globalProperties.globalThis;
+    delete globalProperties.global;
+
     const sandbox = {
+      ...globalProperties,
       module: buildModule(),
       require: id => sandbox.module.require(id),
-      console,
-      process,
       serverless: this.serverless,
       options: this.options,
       __filename: scriptFile,
       __dirname: path.dirname(fs.realpathSync(scriptFile)),
+      exports: Object(),
     };
 
     // See: https://github.com/nodejs/node/blob/7c452845b8d44287f5db96a7f19e7d395e1899ab/lib/internal/modules/cjs/helpers.js#L14
