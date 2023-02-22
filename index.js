@@ -141,6 +141,7 @@ class Scriptable {
       options: this.options,
       __filename: scriptFile,
       __dirname: path.dirname(fs.realpathSync(scriptFile)),
+      exports: Object(),
     };
 
     // See: https://github.com/nodejs/node/blob/7c452845b8d44287f5db96a7f19e7d395e1899ab/lib/internal/modules/cjs/helpers.js#L14
