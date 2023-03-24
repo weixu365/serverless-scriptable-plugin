@@ -1,6 +1,6 @@
 [![npm version](https://badge.fury.io/js/serverless-scriptable-plugin.svg)](https://badge.fury.io/js/serverless-scriptable-plugin)
 ![npm](https://img.shields.io/npm/dw/serverless-scriptable-plugin?style=plastic)
-[![Build Status](https://travis-ci.org/weixu365/serverless-scriptable-plugin.svg?branch=master)](https://travis-ci.org/weixu365/serverless-scriptable-plugin)
+[![Build Status](https://github.com/weixu365/serverless-scriptable-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/weixu365/serverless-scriptable-plugin/actions/workflows/build.yml/badge.svg)
 [![Test Coverage](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/coverage.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/coverage)
 [![Code Climate](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/gpa.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
 [![Issue Count](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin/badges/issue_count.svg)](https://codeclimate.com/github/weixu365/serverless-scriptable-plugin)
