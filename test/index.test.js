@@ -1,9 +1,12 @@
-const { expect } = require('chai');
+const chai = require('chai');
 const fs = require('fs');
 const path = require('path');
 const tmp = require('tmp');
 const Bluebird = require('bluebird');
 const Scriptable = require('../index');
+
+const { expect } = chai;
+chai.config.truncateThreshold = 0;
 
 describe('ScriptablePluginTest', () => {
   it('should run command', () => {
@@ -225,6 +228,21 @@ describe('ScriptablePluginTest', () => {
         const stderr = fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' });
 
         expect(true).equals(false, `stdout: ${stdout}\n stderr: ${stderr}`);
+      });
+  });
+
+  it('should suppress stack track when failed to run executable file', () => {
+    const serverless = serviceWithScripts({ test: 'non-exist-file' });
+    const scriptable = new Scriptable(serverless);
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => { throw new Error('Should throw exception'); })
+      .catch(err => {
+        chai.expect(err.stack).equals(null);
+        expect(err.message).equals('Failed to run command: non-exist-file');
       });
   });
 

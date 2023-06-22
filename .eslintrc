@@ -14,6 +14,7 @@ rules:
   indent: [error, 2, {"FunctionDeclaration": {"parameters": "first"}}]
   no-underscore-dangle: off
   arrow-parens: [error, "as-needed"]
+  max-classes-per-file: [error, 2 ]
 
 env:
   es6: true
