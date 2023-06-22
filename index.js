@@ -7,6 +7,14 @@ const path = require('path');
 const Bluebird = require('bluebird');
 const { execSync } = require('child_process');
 
+// Error without stack trace
+class SimpleError extends Error {
+  constructor(msg) {
+    super(msg);
+    this.stack = null;
+  }
+}
+
 class Scriptable {
   constructor(serverless, options) {
     this.serverless = serverless;
@@ -108,7 +116,11 @@ class Scriptable {
       console.log(`Running command: ${script}`);
     }
 
-    return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
+    try {
+      return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
+    } catch (err) {
+      throw new SimpleError(`Failed to run command: ${script}`);
+    }
   }
 
   runJavascriptFile(scriptFile) {
