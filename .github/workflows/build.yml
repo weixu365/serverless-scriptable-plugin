@@ -41,7 +41,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     strategy:
       matrix:
-        node-version: [18]
+        node-version: [20]
 
     steps:
       - uses: actions/checkout@v4
