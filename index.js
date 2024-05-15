@@ -116,11 +116,11 @@ class Scriptable {
       console.log(`Running command: ${script}`);
     }
 
-    console.log(`Provider environment: ${this.serverless.provider.environment}`);
+    console.log(`Provider environment: ${this.serverless.service.provider.environment}`);
 
     try {
       return execSync(script, {
-        env: { ...process.env, ...this.serverless.provider.environment },
+        env: { ...process.env, ...this.serverless.service.provider.environment },
         stdio: [this.stdin, this.stdout, this.stderr],
       });
     } catch (err) {
