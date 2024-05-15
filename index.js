@@ -116,7 +116,7 @@ class Scriptable {
       console.log(`Running command: ${script}`);
     }
 
-    console.log(`Provider environment: ${this.serverless.service.provider.environment}`);
+    console.log(`Provider environment: ${JSON.stringify(this.serverless.service.provider.environment)}`);
 
     try {
       return execSync(script, {
