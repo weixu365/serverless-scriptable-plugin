@@ -400,6 +400,31 @@ describe('ScriptablePluginTest', () => {
     expect(scriptable.first(1, false)).equal(1);
   });
 
+  it('should run command with serverless environment', () => {
+    const scriptable = new Scriptable(serviceWithScripts({ test: 'echo ${HELLO}' }, { HELLO: 'WORLD' }));
+
+    scriptable.stdout = tmp.fileSync({ prefix: 'stdout-' });
+    scriptable.stderr = tmp.fileSync({ prefix: 'stderr-' });
+
+    return runScript(scriptable, 'test')
+      .then(() => {
+        console.log('checking file', scriptable.stdout.name);
+        expect(fs.readFileSync(scriptable.stdout.name, { encoding: 'utf-8' })).string('WORLD');
+        expect(fs.readFileSync(scriptable.stderr.name, { encoding: 'utf-8' })).equal('');
+      });
+  });
+
+  it('should run javascript with serverless environment', () => {
+    const scriptFile = tmp.fileSync({ postfix: '.js' });
+    fs.writeFileSync(scriptFile.name, 'serverless.service.artifact = `${process.env.HELLO}.zip`;');
+
+    const serverless = serviceWithScripts({ test: scriptFile.name }, { HELLO: 'WORLD' });
+    const scriptable = new Scriptable(serverless);
+
+    return runScript(scriptable, 'test')
+      .then(() => expect(serverless.service.artifact).equal('WORLD.zip'));
+  });
+
   it('manual check: should run command with color', () => {
     const scriptable = new Scriptable(serviceWithScripts({ test: 'node test/scripts/test-with-color.js' }));
     return runScript(scriptable, 'test');
@@ -415,11 +440,11 @@ describe('ScriptablePluginTest', () => {
     return Bluebird.resolve(scriptable.hooks[event]());
   }
 
-  function serviceWithScripts(scriptHooks) {
-    return serviceWithCustom({ scriptHooks });
+  function serviceWithScripts(scriptHooks, environment) {
+    return serviceWithCustom({ scriptHooks }, environment);
   }
 
-  function serviceWithCustom(custom) {
-    return { service: { custom } };
+  function serviceWithCustom(custom, environment) {
+    return { service: { custom, provider: { environment } } };
   }
 });
