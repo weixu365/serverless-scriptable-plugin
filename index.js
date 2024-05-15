@@ -111,16 +111,21 @@ class Scriptable {
     };
   }
 
+  environment() {
+    return {
+      ...(process.env || {}),
+      ...((((this.serverless || {}).service || {}).provider || {}).environment || {}),
+    };
+  }
+
   runCommand(script) {
     if (this.showCommands) {
       console.log(`Running command: ${script}`);
     }
 
-    console.log(`Provider environment: ${JSON.stringify(this.serverless.service.provider.environment)}`);
-
     try {
       return execSync(script, {
-        env: { ...process.env, ...this.serverless.service.provider.environment },
+        env: this.environment(),
         stdio: [this.stdin, this.stdout, this.stderr],
       });
     } catch (err) {
