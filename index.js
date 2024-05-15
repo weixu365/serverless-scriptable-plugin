@@ -116,8 +116,13 @@ class Scriptable {
       console.log(`Running command: ${script}`);
     }
 
+    console.log(`Provider environment: ${this.serverless.provider.environment}`);
+
     try {
-      return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
+      return execSync(script, {
+        env: { ...process.env, ...this.serverless.provider.environment },
+        stdio: [this.stdin, this.stdout, this.stderr],
+      });
     } catch (err) {
       throw new SimpleError(`Failed to run command: ${script}`);
     }
