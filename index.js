@@ -114,7 +114,7 @@ class Scriptable {
   environment() {
     return {
       ...(process.env || {}),
-      ...((((this.serverless || {}).service || {}).provider || {}).environment || {}),
+      ...(this.serverless?.service?.provider?.environment || {}),
     };
   }
 
