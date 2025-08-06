@@ -40,7 +40,7 @@
     "mocha": "10.3.0",
     "nyc": "15.1.0",
     "semantic-release": "23.0.2",
-    "tmp": "0.2.1"
+    "tmp": "0.2.4"
   },
   "dependencies": {
     "bluebird": "3.7.2"
