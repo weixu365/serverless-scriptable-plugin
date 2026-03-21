@@ -1,8 +1,0 @@
----
-rules:
-  no-use-before-define: off
-  no-template-curly-in-string: off
-  import/no-extraneous-dependencies: [error, { devDependencies: true }]
-
-env:
-  mocha: true
