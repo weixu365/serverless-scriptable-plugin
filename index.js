@@ -118,7 +118,7 @@ class Scriptable {
 
     try {
       return execSync(script, { stdio: [this.stdin, this.stdout, this.stderr] });
-    } catch (err) {
+    } catch {
       throw new SimpleError(`Failed to run command: ${script}`);
     }
   }
