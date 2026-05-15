@@ -35,7 +35,7 @@
     "commitizen": "4.3.1",
     "cz-conventional-changelog": "3.3.0",
     "@eslint/js": "10.0.1",
-    "eslint": "10.3.0",
+    "eslint": "10.4.0",
     "eslint-plugin-n": "18.0.1",
     "globals": "^17.4.0",
     "mocha": "11.7.5",
