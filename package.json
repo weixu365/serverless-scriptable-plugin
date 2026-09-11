@@ -35,12 +35,12 @@
     "commitizen": "4.3.2",
     "cz-conventional-changelog": "3.3.0",
     "@eslint/js": "10.0.1",
-    "eslint": "10.5.0",
-    "eslint-plugin-n": "18.1.0",
+    "eslint": "10.10.0",
+    "eslint-plugin-n": "18.3.0",
     "globals": "^17.4.0",
-    "mocha": "11.7.6",
+    "mocha": "12.0.1",
     "nyc": "18.0.0",
-    "semantic-release": "25.0.5",
+    "semantic-release": "25.0.9",
     "tmp": "0.2.7"
   },
   "dependencies": {
